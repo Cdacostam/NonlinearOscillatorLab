@@ -7,11 +7,11 @@ Dependencies: NumPy ≥ 1.23, SciPy ≥ 1.10, mpmath ≥ 1.2 (installed automati
 ```bash
 # from the archived release / a clone of the repository
 python -m pip install .            # or: python -m pip install -e ".[test]"  (development)
-python -m pytest -q                # 158 tests, under a minute
+python -m pytest -q                # 166 tests, about a minute
 python examples/quickstart.py
 ```
 
-Once the package is published on PyPI (see `RELEASING.md`):
+Once the package is published on PyPI:
 
 ```bash
 python -m pip install nonlinear-oscillator-lab

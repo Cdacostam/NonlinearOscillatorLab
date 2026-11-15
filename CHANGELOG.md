@@ -35,6 +35,18 @@ All notable changes are listed here. Versions follow [semantic versioning](https
   (`mpf(float(v))`). The decimal strings used before moved the reference by up to 8.1e-7 near
   barrier energies; the closed-form solutions themselves are unchanged.
 
+### Reproduction
+- `reproduce/period_accuracy_figure.py` draws the period-accuracy figure (Figure 3 of the paper,
+  Figure S5 of the supplement): panel (a) from `data/wolfram/period_accuracy.csv`, panel (b) computed
+  with `period_mp` at 40 digits (`data/results/period_accuracy_panel_b.csv`, equal to the Wolfram
+  values in double precision and to the elliptic-K periods to 3e-40). Its output replaces
+  `data/figures/fig6_period_accuracy.{pdf,png}`, which `code_wl/MakeFigures.wls` drew with an
+  additional v0.1.0 series.
+- `reproduce/README.md` maps every table and figure of the paper and supplement to its command and
+  archived file; Table 5 comes from `data/results/v0.2.1_period/`.
+- `reproduce/make_revision_tables.py` removed: it wrote LaTeX tables from the v0.2.0 runs.
+- Documentation: 166 tests in `code_py/docs/installation.md`; paths `code_wl/` in script headers.
+
 ## [0.2.0] - 2026-11 (first revision of the SoftwareX article)
 
 ### Added

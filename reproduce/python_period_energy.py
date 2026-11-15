@@ -1,6 +1,6 @@
 """Period-energy grids computed with the Python package.
 
-Output: reproduce/outputs/python_period_energy.csv (read by mathematica/MakeFigures.wls,
+Output: reproduce/outputs/python_period_energy.csv (copied to benchmarks/; read by code_wl/MakeFigures.wls,
 which recomputes every point in the Wolfram Language and against closed-form or
 40-digit references).
 """

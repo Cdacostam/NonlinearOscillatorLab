@@ -19,7 +19,7 @@ reproduction scripts in `reproduce/` are the reproducible capsule.
 | `code_wl/` | Wolfram Language package, paclet metadata, 37 tests, figure scripts, v0.2.1 verification evidence |
 | `data/` | Inputs and archived outputs: Wolfram campaign and tables, campaign and baseline results, figures |
 | `benchmarks/`, `examples/` | Python outputs read by the Wolfram scripts (python_periods.csv, period–energy curves, orbit.csv), kept at the paths the tested scripts expect |
-| `reproduce/` | One script per table or figure of the paper; new outputs go to `reproduce/outputs/` |
+| `reproduce/` | Scripts for the tables and figures of the paper; new outputs go to `reproduce/outputs/`. `reproduce/README.md` maps every table and figure to its command and archived file |
 
 `MANIFEST.sha256` lists the SHA-256 of every file (`sha256sum -c MANIFEST.sha256`).
 
@@ -38,7 +38,9 @@ wolframscript -file code_wl/RunTests.wls   # Mathematica or Wolfram Engine 14+; 
 The Wolfram suite of v0.2.1 (37/37, Mathematica 15.0.0, Windows 64-bit) was run on these files by the
 Wolfram co-worker; the evidence is in `code_wl/verification_v0.2.1/round2/`.
 
-`reproduce/README.md` maps every table and figure of the paper to its command.
+`reproduce/README.md` maps every table and figure of the paper and the supplement to its command and
+archived file. The period-accuracy figure (`python reproduce/period_accuracy_figure.py`) also needs
+`matplotlib`.
 
 ## Version 0.2.1
 

@@ -1,6 +1,7 @@
 """Write Python-side benchmark periods for cross-implementation checks.
 
-Output: reproduce/outputs/python_periods.csv, read by mathematica/CrossValidation.wls.
+Output: reproduce/outputs/python_periods.csv, copied to benchmarks/python_periods.csv,
+which code_wl/RunTests.wls and code_wl/MakeFigures.wls read.
 """
 from pathlib import Path
 import csv
