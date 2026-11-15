@@ -8,6 +8,11 @@ authors:
     given-names: Alvaro H.
     email: ahsalass@unal.edu.co
     affiliation: "Universidad Nacional de Colombia, Sede Manizales"
+    orcid: "https://orcid.org/0000-0001-9343-6062"
+  - family-names: Acosta-Medina
+    given-names: Carlos Daniel
+    affiliation: "Universidad Nacional de Colombia"
+    orcid: "https://orcid.org/0000-0002-6477-8984"
 license: MIT
 keywords:
   - Duffing oscillator

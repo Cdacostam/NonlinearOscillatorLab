@@ -52,5 +52,6 @@ levels of degenerate equilibria are detected (formerly a separate patch). Campai
 
 ## Citation
 
-See `CITATION.cff`. Author of the software: Alvaro H. Salas (Universidad Nacional de Colombia, Sede
-Manizales).
+See `CITATION.cff`. Authors of the software: Alvaro H. Salas (Universidad Nacional de Colombia, Sede
+Manizales; ORCID 0000-0001-9343-6062) and Carlos Daniel Acosta-Medina (Universidad Nacional de
+Colombia; ORCID 0000-0002-6477-8984).
