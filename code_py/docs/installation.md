@@ -37,7 +37,7 @@ PacletInstall["/path/to/NonlinearOscillatorLab-0.2.1.paclet"]   (* built with Cr
 Needs["NonlinearOscillatorLab`"]
 ```
 
-Verification: `wolframscript -file code_wl/RunTests.wls` (34 tests).
+Verification: `wolframscript -file code_wl/RunTests.wls` (37 tests).
 
 ### Licensing of the Wolfram Engine
 

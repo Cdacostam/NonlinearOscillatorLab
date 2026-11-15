@@ -16,7 +16,7 @@ reproduction scripts in `reproduce/` are the reproducible capsule.
 | Folder | Contents |
 |---|---|
 | `code_py/` | Python package `nonlinear_oscillator_lab` (src/, 166 tests, examples, documentation) |
-| `code_wl/` | Wolfram Language package, paclet metadata, 34 tests, figure scripts, v0.2.1 verification evidence |
+| `code_wl/` | Wolfram Language package, paclet metadata, 37 tests, figure scripts, v0.2.1 verification evidence |
 | `data/` | Inputs and archived outputs: Wolfram campaign and tables, campaign and baseline results, figures |
 | `benchmarks/`, `examples/` | Python outputs read by the Wolfram scripts (python_periods.csv, period–energy curves, orbit.csv), kept at the paths the tested scripts expect |
 | `reproduce/` | One script per table or figure of the paper; new outputs go to `reproduce/outputs/` |
@@ -32,11 +32,11 @@ python examples/quickstart.py
 ```
 
 ```
-wolframscript -file code_wl/RunTests.wls   # Mathematica or Wolfram Engine 14+; 34 tests
+wolframscript -file code_wl/RunTests.wls   # Mathematica or Wolfram Engine 14+; 37 tests
 ```
 
-The Wolfram suite of v0.2.1 (34/34, Mathematica 15.0.0, Windows 64-bit) was run on these files by the
-Wolfram co-worker; the evidence is in `code_wl/verification_v0.2.1/`.
+The Wolfram suite of v0.2.1 (37/37, Mathematica 15.0.0, Windows 64-bit) was run on these files by the
+Wolfram co-worker; the evidence is in `code_wl/verification_v0.2.1/round2/`.
 
 `reproduce/README.md` maps every table and figure of the paper to its command.
 
@@ -46,7 +46,7 @@ Python and Wolfram: the closed-form failure message states only that no candidat
 acceptance checks (it no longer claims that no real representation exists, nor anything about the
 motion). Python: `period` uses backward deflation where forward deflation of E - V is inaccurate
 (wide wells such as (a, b, c) = (1, -1, 1e-8), and the outer double-well orbits next to the
-separatrix). Wolfram: critical
+separatrix). Wolfram: `NOLPeriod` uses the same backward deflation, and critical
 levels of degenerate equilibria are detected (formerly a separate patch). Campaign script: the
 25-digit reference starts from the exact binary inputs. See `CHANGELOG.md`.
 

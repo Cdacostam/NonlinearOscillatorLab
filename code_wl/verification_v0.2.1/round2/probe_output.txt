@@ -1,0 +1,12 @@
+$Version: 15.0.0 for Microsoft Windows (64-bit) (May 19, 2026)
+OS: Windows Windows-x86-64
+--- T2 ANTES (codigo de la ronda 1) ---
+antes machine: 8.50929202969664   relerr = 0.2546717160056719
+antes WP40:    11.4168376706356087100533891214990263504540167510029292495427`40.   relerr = 7.461266938061944*^-26
+--- T2 DESPUES (deflatedQuotient) ---
+despues machine: 11.41683767063562   relerr = 9.335458157397215*^-16
+despues WP40:    11.4168376706356087100533891214990263504540167510029292495427`40.   relerr = 7.461266938061944*^-26
+--- T3 casos de NOLExactSolution (codigo corregido) ---
+{1., 0., -1., 0., 1.} -> Failure["NotCovered", Message = "No candidate representation passed the acceptance checks"]
+{1., -4., 3., 0., 0.3849001794597505} -> Representation = "II / y: Linear"; err[0,20] vs 32-digit NDSolve = 2.624107275916998*^-8
+{1., 0., 1., 100., 1.} -> Failure["NotCovered", Message = "No candidate representation passed the acceptance checks"]

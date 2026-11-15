@@ -104,6 +104,25 @@ tests = {
    Module[{d = NOLDuffingSolution[1., 1., 1., 0.]}, relErr[d["Period"], NOLDuffingExactPeriod[1, 1, 1.]] < 10^-14],
    True, TestID -> "closed_form_duffing_period"],
 
+  (* ---- v0.2.1 (round 2): failure message of NOLExactSolution, identical to Python ---- *)
+  VerificationTest[
+   Module[{sol = Quiet@NOLExactSolution[1., 0., -1., 0., 1.]},
+    {FailureQ[sol], If[FailureQ[sol], sol[[2]]["Message"], sol]}],
+   {True, "No candidate representation passed the acceptance checks"},
+   TestID -> "closed_form_failure_message_unbounded"],
+
+  (* ---- v0.2.1 (round 2): large turning points, |x+-| ~ 12247 (backward deflation of E - V) ---- *)
+  VerificationTest[
+   Module[{t = NOLPeriod[NOLModel[1., -1., 1.*^-8], 0., 1.]},
+    TrueQ[NumericQ[t] && relErr[t, 11.41683767063560871005338997333976084179`40] < 10^-12]], True,
+   TestID -> "period_large_turning_points_machine"],
+  VerificationTest[
+   (* the Python reference uses exact binary inputs: c is the exact value of the double 1e-8,
+      not 10^-8 (they differ by 2.1e-17 relative, which moves T by 7.5e-26 relative) *)
+   Module[{t = NOLPeriod[NOLModel[1, -1, SetPrecision[1.*^-8, Infinity]], 0, 1, WorkingPrecision -> 40]},
+    TrueQ[NumericQ[t] && relErr[t, 11.41683767063560871005338997333976084179`40] < 10^-30]], True,
+   TestID -> "period_large_turning_points_40_digits"],
+
   (* ---- new: cross-implementation agreement with the Python package ---- *)
   VerificationTest[
    Module[{rows = Rest@Import[FileNameJoin[{$root, "benchmarks", "python_periods.csv"}], "CSV"]},
@@ -117,6 +136,7 @@ lines = Table[{t["TestID"], ToString[t["Outcome"]], Round[1000 QuantityMagnitude
 Export[FileNameJoin[{$dir, "test_report.csv"}], Prepend[lines, {"test", "outcome", "ms"}], "CSV"];
 summary = StringJoin[
    "NonlinearOscillatorLab (Wolfram Language) ", NOLVersion, " - ", $Version, "\n",
+   "Operating system: ", $OperatingSystem, " (", $SystemID, ")\n",
    "Passed ", ToString[report["TestsSucceededCount"]], " / ", ToString[Length[tests]], "\n\n",
    StringRiffle[StringRiffle[ToString /@ #, "  "] & /@ lines, "\n"], "\n"];
 Export[FileNameJoin[{$dir, "test_report.txt"}], summary, "Text"];

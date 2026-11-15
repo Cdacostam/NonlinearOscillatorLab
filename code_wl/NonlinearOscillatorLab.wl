@@ -145,10 +145,31 @@ NOLBoundedComponent[m_NOLModel, x0_, v0_, OptionsPattern[]] :=
 
 (* ---------- period ---------- *)
 
+(* Q(x) = (E - V(x))/((x - xl)(xr - x)).
+   Forward deflation (PolynomialQuotient, from the leading term) loses the low-degree coefficients
+   when the turning points are large (e.g. a = 1, b = -1, c = 10^-8: |x+-| ~ 12247), because the
+   roots carry only working-precision accuracy. Backward deflation (divide the reversed polynomials,
+   i.e. start from the constant term) is used instead when forward deflation does not reproduce
+   E - V on the interval to 10^-12 relative to the size of its terms and backward is more accurate.
+   This mirrors the Python 0.2.1 fix. *)
+deflatedQuotient[m_NOLModel, en_, xl_, xr_, x_] :=
+ Module[{pe = Expand[en - NOLPotential[m, x]], d = Expand[(x - xl) (xr - x)], n, qf, qb, xs, cf, sc, res},
+  qf = PolynomialQuotient[pe, d, x];
+  If[(pe /. x -> 0) == 0 || xl xr == 0, Return[qf, Module]];
+  n = Exponent[pe, x];
+  qb = Expand[x^(n - 2) (PolynomialQuotient[Expand[x^n (pe /. x -> 1/x)], Expand[x^2 (d /. x -> 1/x)], x] /. x -> 1/x)];
+  xs = (xl + xr)/2 + (xr - xl)/2 Sin[Range[-15, 15] Pi/32];          (* 31 interior points *)
+  cf = Abs[CoefficientList[pe, x]];
+  (* size of the terms of E - V; the x^0 term is written as 1 so that x = 0 (a grid point for
+     symmetric orbits) does not produce 0.^0 = Indeterminate *)
+  sc = (cf . Join[{1}, Abs[#]^Range[1, Length[cf] - 1]]) & /@ xs;
+  res[q_] := Max[MapThread[Abs[(q /. x -> #1) (#1 - xl) (xr - #1) - (pe /. x -> #1)]/#2 &, {xs, sc}]];
+  If[TrueQ[res[qf] <= 10^-12], qf, If[TrueQ[res[qb] < res[qf]], qb, qf]]];
+
 (* E - V(x) = (x - xl)(xr - x) Q(x); with x = c + h Sin[t], dx/Sqrt[2(E-V)] = dt/Sqrt[2 Q(x)] *)
 regularisedPeriod[m_NOLModel, en_, {xl_, xr_}, wp_, pg_] :=
  Module[{x, t, q, ctr = (xl + xr)/2, h = (xr - xl)/2, f, nodes},
-  q = PolynomialQuotient[Expand[en - NOLPotential[m, x]], Expand[(x - xl) (xr - x)], x];
+  q = deflatedQuotient[m, en, xl, xr, x];
   f = Function[{tt}, Evaluate[1/Sqrt[2 q /. x -> ctr + h Sin[tt]]]];
   (* split where the orbit crosses a stationary point (integrand peaks near separatrices) *)
   nodes = Join[{-Pi/2},
@@ -388,7 +409,7 @@ cqSolution[\[Alpha]_?NumericQ, \[Beta]_?NumericQ, \[Gamma]_?NumericQ,
     Failure[
      "NotCovered", <|
       "Message" ->
-       "No candidate representation passed the acceptance checks (unbounded motion in all tested cases)"|>]]];
+       "No candidate representation passed the acceptance checks"|>]]];
 
 
 NOLDuffingSolution[p_?NumericQ, q_?NumericQ, y0_?NumericQ, y1_?NumericQ] := duffingSolution[p, q, y0, y1];

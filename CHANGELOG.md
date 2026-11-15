@@ -23,9 +23,14 @@ All notable changes are listed here. Versions follow [semantic versioning](https
   for c = 1e-7 it was 4e-3 off. On the 320 baseline orbits only 12 outer double-well periods next to
   the separatrix change; their maximum error falls from 1.1e-11 to 5e-14
   (`data/results/v0.2.1_period/`). `tests/test_v021_corrections.py`.
+- Wolfram `NOLPeriod`: the same backward deflation (`deflatedQuotient`). At machine precision the
+  period of (1, -1, 1e-8, 0, 1) was 8.50929202969664, 25% off, without any message; it is now
+  11.41683767063562 (relative error 9e-16). On the 320 baseline orbits the maximum Wolfram error
+  falls from 2.4e-11 to 1.3e-11 and the outer double-well errors to 5.0e-14.
 - Wolfram: the degenerate-equilibria correction (`NOLClassifyEnergy` key `"Degenerate"`, critical
-  levels in `"OnSeparatrixEnergy"`) is merged into the package; three tests added (34 in total).
-  Verified with Mathematica 15.0.0 (code_wl/verification_v0.2.1/).
+  levels in `"OnSeparatrixEnergy"`) is merged into the package; three tests added. Three more
+  cover the failure message and the period above (37 in total). Verified with Mathematica 15.0.0
+  (code_wl/verification_v0.2.1/: first round; round2/: final files, 37/37).
 - Campaign script: the 25-digit mpmath reference starts from the exact binary inputs
   (`mpf(float(v))`). The decimal strings used before moved the reference by up to 8.1e-7 near
   barrier energies; the closed-form solutions themselves are unchanged.

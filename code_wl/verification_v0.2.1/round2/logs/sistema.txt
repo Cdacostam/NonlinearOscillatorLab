@@ -1,0 +1,5 @@
+$Version: 15.0.0 for Microsoft Windows (64-bit) (May 19, 2026)
+$OperatingSystem: Windows
+$SystemID: Windows-x86-64
+$MachineName: oculto
+Fecha: Sun 15 Nov 2026 12:56:33

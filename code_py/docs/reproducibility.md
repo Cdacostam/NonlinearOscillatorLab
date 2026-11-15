@@ -16,7 +16,7 @@ From the root of the archive, after `pip install ./code_py` (Python) or with `wo
 
 | Result in the paper | Command | Output |
 |---|---|---|
-| Wolfram tests (34) | `wolframscript -file code_wl/RunTests.wls` | `code_wl/test_report.*` |
+| Wolfram tests (37) | `wolframscript -file code_wl/RunTests.wls` | `code_wl/test_report.*` |
 | Wolfram figures and tables | `wolframscript -file code_wl/RunAll.wls` | `figures/`, `tables/` at the archive root (archived: `data/figures/`, `data/wolfram/`) |
 | Python tests (Table 3) | `cd code_py && python -m pytest -q --cov=nonlinear_oscillator_lab --cov-branch` | terminal |
 | Closed-form campaigns (Table 4) | `python reproduce/closed_form_campaign.py --n 1000` (about 15 min on 4 cores; resumable) | `reproduce/outputs/closed_form_campaign_py*` |

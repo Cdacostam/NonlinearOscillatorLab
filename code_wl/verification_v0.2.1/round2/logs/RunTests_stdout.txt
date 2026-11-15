@@ -1,0 +1,45 @@
+exit=0
+NonlinearOscillatorLab (Wolfram Language) 0.2.1 - 15.0.0 for Microsoft Windows (64-bit) (May 19, 2026)
+Operating system: Windows (Windows-x86-64)
+Passed 37 / 37
+
+harmonic_period  Success  75.7
+harmonic_solution_and_energy  Success  33.8
+double_well_equilibria_exact  Success  0.
+turning_points_exact  Success  0.
+separatrix_detection  Success  16.5
+cubic_quintic  Success  27.1
+equilibrium_period  Success  0.
+harmonic_period_40_digits  Success  5.3
+cubic_quintic_machine_vs_40_digits  Success  16.5
+elliptic_hardening  Success  0.
+elliptic_softening  Success  15.9
+elliptic_double_well_inner_dn  Success  0.
+elliptic_double_well_outer_cn  Success  9.1
+elliptic_double_well_50_digits  Success  7.6
+elliptic_solutions_satisfy_ODE  Success  175.5
+simulation_vs_elliptic_trajectory  Success  7.2
+triple_well_equilibria_exact  Success  0.
+triple_well_barrier  Success  0.
+period_closes_orbit  Success  9.7
+unbounded_detected  Success  0.
+degenerate_level_fails  Success  0.
+degenerate_equilibria_exact  Success  6.5
+degenerate_model_period_vs_python  Success  0.
+separatrix_log_asymptotics  Success  194.5
+closed_form_hardening  Success  446.1
+closed_form_softening  Success  308.1
+closed_form_dw_inner  Success  519.9
+closed_form_dw_outer  Success  611.9
+closed_form_cq_demo  Success  516.7
+closed_form_tw_center  Success  300.2
+closed_form_tw_side  Success  1150.1
+closed_form_tw_outer  Success  684.3
+closed_form_duffing_period  Success  0.
+closed_form_failure_message_unbounded  Success  0.
+period_large_turning_points_machine  Success  16.6
+period_large_turning_points_40_digits  Success  165.9
+python_cross_validation  Success  3996.4
+
+
+---STDERR---
