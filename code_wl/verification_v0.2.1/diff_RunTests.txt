@@ -1,0 +1,17 @@
+--- RunTests.wls	2026-11-14 11:21:15.000000000 -0500
++++ /home/claude/deliver/NonlinearOscillatorLab_v0.2.1_mathematica/RunTests.wls	2026-11-14 14:07:23.611982225 -0500
+@@ -72,6 +72,14 @@
+     Norm[{s["x"][T] - 0.8, s["v"][T] - 0.1}] < 10^-8], True, TestID -> "period_closes_orbit"],
+   VerificationTest[FailureQ[Quiet@NOLPeriod[NOLModel[1, -1], 2., 0]], True, TestID -> "unbounded_detected"],
+ 
++  (* ---- v0.2.1: degenerate equilibria (V'' = 0) are critical levels ---- *)
++  VerificationTest[FailureQ[Quiet@NOLPeriod[NOLModel[1, -2, 1], 0, 1/Sqrt[3]]], True,
++   TestID -> "degenerate_level_fails"],
++  VerificationTest[NOLClassifyEnergy[NOLModel[1, -2, 1], 0, 1/Sqrt[3]]["Degenerate"], {{-1, 1/6}, {1, 1/6}},
++   TestID -> "degenerate_equilibria_exact"],
++  VerificationTest[Abs[NOLPeriod[NOLModel[1, -2, 1], 1/2, 0] - 7.746275937880837] < 10^-12, True,
++   TestID -> "degenerate_model_period_vs_python"],
++
+   (* ---- new: separatrix asymptotics T ~ (1/lambda) Log[1/dE] + C ---- *)
+   VerificationTest[
+    Module[{m = NOLModel[-1, 1], dE = 10^-10, ti, to},

@@ -1,0 +1,190 @@
+{
+ "n": 30,
+ "ratio_median": 19.929165443993412,
+ "ratio_min": 1.2358803533154037,
+ "ratio_max": 491.7387900355872,
+ "err_dop853_median": 5.779404732564331e-13,
+ "err_mp32bin_median": 1.3836154444391013e-14,
+ "rows": [
+  {
+   "group": "R200",
+   "motion": "bounded",
+   "err_dop853": 6.586819978338099e-11,
+   "err_mp32bin": 7.451816941284051e-13
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.06550365489511e-11,
+   "err_mp32bin": 2.0472512574087887e-13
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.463718449367661e-13,
+   "err_mp32bin": 1.0969003483296547e-13
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.908196237276343e-12,
+   "err_mp32bin": 2.2426505097428162e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 3.058664432842306e-14,
+   "err_mp32bin": 6.314393452555578e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 2.010103195004831e-11,
+   "err_mp32bin": 1.6264545266153618e-11
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 7.542855229303314e-13,
+   "err_mp32bin": 8.215650382226158e-15
+  },
+  {
+   "group": "R200",
+   "motion": "bounded",
+   "err_dop853": 2.846924085364577e-13,
+   "err_mp32bin": 1.3405943022348765e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.455946888195285e-14,
+   "err_mp32bin": 7.577272143066693e-15
+  },
+  {
+   "group": "R200",
+   "motion": "bounded",
+   "err_dop853": 1.4371837053772651e-12,
+   "err_mp32bin": 3.319566843629218e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.179057265853771e-12,
+   "err_mp32bin": 1.4166445794216997e-13
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 3.658184866139891e-14,
+   "err_mp32bin": 5.523359547510154e-15
+  },
+  {
+   "group": "REP",
+   "motion": "bounded",
+   "err_dop853": 1.1985083064880442e-12,
+   "err_mp32bin": 2.437286483747414e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.388223283693151e-13,
+   "err_mp32bin": 1.2101430968414206e-13
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 8.065770273901762e-14,
+   "err_mp32bin": 5.731526364627371e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 5.17058618143551e-13,
+   "err_mp32bin": 2.811639809863209e-14
+  },
+  {
+   "group": "R200",
+   "motion": "bounded",
+   "err_dop853": 3.447242491461111e-14,
+   "err_mp32bin": 5.442694905877232e-15
+  },
+  {
+   "group": "R200",
+   "motion": "bounded",
+   "err_dop853": 2.217004357873975e-12,
+   "err_mp32bin": 3.8413716652030416e-14
+  },
+  {
+   "group": "REP",
+   "motion": "bounded",
+   "err_dop853": 9.72416591693559e-14,
+   "err_mp32bin": 3.4139358007223564e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 4.0183412153282916e-12,
+   "err_mp32bin": 2.7704505356496156e-12
+  },
+  {
+   "group": "SEP",
+   "motion": "bounded",
+   "err_dop853": 2.873257187729905e-13,
+   "err_mp32bin": 7.549516567451064e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 1.1124434706744069e-13,
+   "err_mp32bin": 2.3619994848900205e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 1.3128387266192476e-13,
+   "err_mp32bin": 7.049916206369744e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 1.585509501467186e-12,
+   "err_mp32bin": 5.062616992290714e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 7.019385073192552e-14,
+   "err_mp32bin": 3.941291737419306e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 6.034062138837726e-14,
+   "err_mp32bin": 1.426636586643326e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 7.590039707849883e-13,
+   "err_mp32bin": 1.2878587085651816e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 3.47499806707674e-14,
+   "err_mp32bin": 5.9119376061289586e-15
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 5.4358739731696915e-12,
+   "err_mp32bin": 4.39648317751562e-14
+  },
+  {
+   "group": "RWIDE",
+   "motion": "bounded",
+   "err_dop853": 3.5071945347908695e-13,
+   "err_mp32bin": 7.438494264988549e-15
+  }
+ ]
+}

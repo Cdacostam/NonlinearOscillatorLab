@@ -1,0 +1,22 @@
+site_name: NonlinearOscillatorLab
+site_description: Duffing and cubic-quintic oscillators in Python and the Wolfram Language
+site_author: Alvaro H. Salas
+theme:
+  name: material
+  font: false
+markdown_extensions:
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+extra_javascript:
+  - assets/mathjax/es5/tex-chtml.js
+use_directory_urls: false
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Tutorial: tutorial.md
+  - Python API: api_python.md
+  - Wolfram Language API: api_wolfram.md
+  - Troubleshooting: troubleshooting.md
+  - Validation and reproducibility: reproducibility.md
+  - Scope and roadmap: scope.md

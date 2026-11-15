@@ -1,0 +1,18 @@
+{
+ "unit": 74,
+ "integration": 4,
+ "regression": 58,
+ "failure": 22,
+ "slow": 4,
+ "passed": 158,
+ "failed": 0,
+ "wall_s": 33.23,
+ "coverage_total": 92.03655352480418,
+ "coverage_by_module": {
+  "__init__.py": 100.0,
+  "closed_form.py": 88.8382687927107,
+  "core.py": 97.81818181818181,
+  "forced.py": 87.23404255319149
+ },
+ "total": 158
+}

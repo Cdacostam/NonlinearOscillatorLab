@@ -1,0 +1,147 @@
+{
+ "periods": {
+  "NOL period": {
+   "n": 320,
+   "failed": 0,
+   "err_median": 6.59334848192235e-16,
+   "err_max": 1.0600977783969522e-11,
+   "frac_below_1e10": 1.0,
+   "time_median_ms": 1.06089099995188,
+   "peak_mem_kib": 16.76171875,
+   "err_max_by_family": {
+    "hardening": 2.621921804310088e-16,
+    "softening": 4.960872621020093e-12,
+    "dw_inner": 1.3511636322074377e-12,
+    "dw_outer": 1.0600977783969522e-11,
+    "cq_demo": 2.8700419169852586e-16,
+    "tw_center": 7.42067053363091e-12,
+    "tw_side": 7.58908847013345e-12,
+    "tw_outer": 3.4116678274109295e-12
+   }
+  },
+  "NOL period_mp(30)": {
+   "n": 320,
+   "failed": 0,
+   "err_median": 0.0,
+   "err_max": 0.0,
+   "frac_below_1e10": 1.0,
+   "time_median_ms": 29.228532499928406,
+   "peak_mem_kib": 171.8095703125,
+   "err_max_by_family": {
+    "hardening": 0.0,
+    "softening": 0.0,
+    "dw_inner": 0.0,
+    "dw_outer": 0.0,
+    "cq_demo": 0.0,
+    "tw_center": 0.0,
+    "tw_side": 0.0,
+    "tw_outer": 0.0
+   }
+  },
+  "SciPy quad": {
+   "n": 320,
+   "failed": 0,
+   "err_median": 2.1352305531849661e-13,
+   "err_max": 1.0077795078316496e-08,
+   "frac_below_1e10": 0.9125,
+   "time_median_ms": 7.2229820000302425,
+   "peak_mem_kib": 15.6015625,
+   "err_max_by_family": {
+    "hardening": 1.6514395103910636e-12,
+    "softening": 2.240742095725551e-09,
+    "dw_inner": 2.3870689271751353e-12,
+    "dw_outer": 9.488486167332078e-13,
+    "cq_demo": 3.698345450407052e-13,
+    "tw_center": 1.0077795078316496e-08,
+    "tw_side": 3.3622455016667196e-09,
+    "tw_outer": 7.978121423095318e-13
+   }
+  },
+  "SciPy quad, QAWS weight": {
+   "n": 320,
+   "failed": 0,
+   "err_median": 5.500324392577133e-09,
+   "err_max": 1.3175192728535103e-06,
+   "frac_below_1e10": 0.0125,
+   "time_median_ms": 15.63262850004321,
+   "peak_mem_kib": 15.8828125,
+   "err_max_by_family": {
+    "hardening": 1.272252971034022e-08,
+    "softening": 1.1354835036042635e-06,
+    "dw_inner": 7.289439423429976e-08,
+    "dw_outer": 7.764506686108531e-09,
+    "cq_demo": 1.1374822170259188e-08,
+    "tw_center": 1.2614684160402977e-06,
+    "tw_side": 1.3175192728535103e-06,
+    "tw_outer": 8.453711834815294e-09
+   }
+  },
+  "SciPy events": {
+   "n": 320,
+   "failed": 0,
+   "err_median": 1.4921407684520768e-12,
+   "err_max": 2.197441847727803e-08,
+   "frac_below_1e10": 0.74375,
+   "time_median_ms": 11.268124000025637,
+   "peak_mem_kib": 49.609375,
+   "err_max_by_family": {
+    "hardening": 1.772586265367397e-13,
+    "softening": 1.1823489716576843e-08,
+    "dw_inner": 8.784840980233407e-09,
+    "dw_outer": 5.391764765358022e-09,
+    "cq_demo": 5.388503699139823e-13,
+    "tw_center": 2.197441847727803e-08,
+    "tw_side": 1.3095247819083724e-08,
+    "tw_outer": 3.4525319228240593e-09
+   }
+  },
+  "SciPy events (default tol)": {
+   "n": 320,
+   "failed": 14,
+   "err_median": 0.0014196455237439677,
+   "err_max": 0.9431776411948203,
+   "frac_below_1e10": 0.0,
+   "time_median_ms": 1.838039999938701,
+   "peak_mem_kib": 12.8984375,
+   "err_max_by_family": {
+    "hardening": 0.0002694656056126635,
+    "softening": 0.16603152481876454,
+    "dw_inner": 0.3665437524968078,
+    "dw_outer": 0.6919127738549127,
+    "cq_demo": 0.0001928442053927498,
+    "tw_center": 0.9431776411948203,
+    "tw_side": 0.3866084589907532,
+    "tw_outer": 0.8151183550737481
+   }
+  }
+ },
+ "trajectories": {
+  "NOL closed form": {
+   "err_median": 4.440892098500626e-15,
+   "err_max": 8.215650382226158e-15,
+   "time_median_ms": 6.439702000079706,
+   "peak_mem_kib": 203.2666015625
+  },
+  "DOP853 rtol=1e-10": {
+   "err_median": 1.2098944068839046e-10,
+   "err_max": 4.434537181907672e-10,
+   "time_median_ms": 12.403372999870044,
+   "peak_mem_kib": 65.91015625
+  },
+  "DOP853 rtol=1e-13": {
+   "err_median": 1.6409096303959814e-13,
+   "err_max": 7.774891841449971e-13,
+   "time_median_ms": 30.825575000108074,
+   "peak_mem_kib": 138.02734375
+  }
+ },
+ "_meta": {
+  "python": "3.13.18",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "mpmath": "1.3.0",
+  "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "reps": 5
+ }
+}

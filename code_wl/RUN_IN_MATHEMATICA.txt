@@ -1,0 +1,17 @@
+Wolfram Language part of NonlinearOscillatorLab 0.2.1
+
+Tests (34; writes code_wl/test_report.txt and .csv):
+   wolframscript -file code_wl/RunTests.wls                         (in a terminal, from the archive root)
+   Get["<path>/NonlinearOscillatorLab-0.2.1/code_wl/RunTests.wls"]  (in a notebook)
+
+Figures and tables (writes figures/ and tables/ at the archive root):
+   wolframscript -file code_wl/RunAll.wls
+
+RunTests.wls reads benchmarks/python_periods.csv; MakeFigures.wls reads benchmarks/ and
+examples/orbit.csv (paths relative to the archive root, as in the tested v0.2.1 scripts).
+The archived outputs are in data/figures and data/wolfram; they were generated with
+Mathematica 15.0 (Windows 64-bit) on 19 Oct 2026 (log: code_wl/history/run_log_Mathematica15.txt).
+The v0.2.1 suite (34/34) was run by the Wolfram co-worker with Mathematica 15.0.0 for Windows on
+these .wl/.wls files; the console output, the degenerate-equilibria checks, the diffs against v0.2.0
+and the verification report are in code_wl/verification_v0.2.1/. The suite has not been re-run
+from this archive.

@@ -1,0 +1,127 @@
+{
+ "R200": {
+  "cases": 200,
+  "represented": 200,
+  "failure_reasons": {},
+  "by_motion": {
+   "bounded": {
+    "cases": 200,
+    "represented": 200
+   }
+  },
+  "err_median": 6.759037773917953e-13,
+  "err_p95": 4.352276317121086e-11,
+  "err_max": 2.124998843555659e-09,
+  "frac_below_1e8": 1.0,
+  "nonfinite": 0,
+  "mp25_rechecks": 29,
+  "build_median_ms": 10.09381549988575,
+  "labels_agree_with_wolfram": 200
+ },
+ "RWIDE": {
+  "cases": 1000,
+  "represented": 745,
+  "failure_reasons": {
+   "No real representation (unbounded motion) | motion=unbounded": 255
+  },
+  "by_motion": {
+   "bounded": {
+    "cases": 745,
+    "represented": 745
+   },
+   "unbounded": {
+    "cases": 255,
+    "represented": 0
+   }
+  },
+  "err_median": 6.388223283693151e-13,
+  "err_p95": 3.55647955530002e-11,
+  "err_max": 5.349006793053945e-09,
+  "frac_below_1e8": 1.0,
+  "nonfinite": 0,
+  "mp25_rechecks": 108,
+  "build_median_ms": 9.523945500177433
+ },
+ "SEP": {
+  "cases": 120,
+  "represented": 120,
+  "failure_reasons": {},
+  "by_motion": {
+   "bounded": {
+    "cases": 80,
+    "represented": 80
+   },
+   "separatrix": {
+    "cases": 40,
+    "represented": 40
+   }
+  },
+  "err_median": 4.6305097776977444e-11,
+  "err_p95": 2.0994048549605177e-08,
+  "err_max": 4.472686421230776e-08,
+  "frac_below_1e8": 0.875,
+  "nonfinite": 0,
+  "mp25_rechecks": 66,
+  "build_median_ms": 13.151754499858725
+ },
+ "REP": {
+  "cases": 40,
+  "represented": 40,
+  "failure_reasons": {},
+  "by_motion": {
+   "bounded": {
+    "cases": 34,
+    "represented": 34
+   },
+   "equilibrium": {
+    "cases": 6,
+    "represented": 6
+   }
+  },
+  "err_median": 1.164346397075633e-14,
+  "err_p95": 9.187904777274706e-13,
+  "err_max": 2.5510323020672132e-12,
+  "frac_below_1e8": 1.0,
+  "nonfinite": 0,
+  "mp25_rechecks": 0,
+  "build_median_ms": 4.782544500130825
+ },
+ "UNB": {
+  "cases": 76,
+  "represented": 56,
+  "failure_reasons": {
+   "No real representation (unbounded motion) | motion=unbounded": 20
+  },
+  "by_motion": {
+   "bounded": {
+    "cases": 24,
+    "represented": 24
+   },
+   "unbounded": {
+    "cases": 36,
+    "represented": 16
+   },
+   "separatrix": {
+    "cases": 16,
+    "represented": 16
+   }
+  },
+  "err_median": 1.0034179043216795e-10,
+  "err_p95": 2.4664953327240696e-07,
+  "err_max": 8.117026718545972e-07,
+  "frac_below_1e8": 0.7321428571428571,
+  "nonfinite": 0,
+  "mp25_rechecks": 34,
+  "build_median_ms": 10.094608499912283
+ },
+ "_meta": {
+  "seed": 20261103,
+  "rwide_n": 1000,
+  "wall_s_last_run": 954.073944568634,
+  "python": "3.13.18",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39",
+  "workers": 2
+ }
+}

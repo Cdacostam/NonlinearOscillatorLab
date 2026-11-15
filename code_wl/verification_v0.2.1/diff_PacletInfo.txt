@@ -1,0 +1,11 @@
+--- PacletInfo.wl	2026-11-14 11:21:15.000000000 -0500
++++ /home/claude/deliver/NonlinearOscillatorLab_v0.2.1_mathematica/PacletInfo.wl	2026-11-14 14:07:23.611973446 -0500
+@@ -3,7 +3,7 @@
+ PacletObject[
+   <|
+     "Name" -> "NonlinearOscillatorLab",
+-    "Version" -> "0.2.0",
++    "Version" -> "0.2.1",
+     "WolframVersion" -> "14.0+",
+     "Description" -> "Energy-based classification, accurate and arbitrary-precision periods, and closed-form Jacobi-elliptic solutions of Duffing and cubic-quintic oscillators.",
+     "Creator" -> "Alvaro H. Salas <ahsalass@unal.edu.co>",

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+site/
+# outputs of the reproduction scripts and of the Wolfram scripts (archived copies are in data/)
+reproduce/outputs/
+/figures/
+/tables/
+code_wl/test_report.txt
+code_wl/test_report.csv
+# editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+# Mathematica
+*.mx

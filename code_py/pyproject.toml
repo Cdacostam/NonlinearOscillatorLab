@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nonlinear-oscillator-lab"
+version = "0.2.1"
+description = "Energy-based classification, accurate periods and closed-form solutions of Duffing and cubic-quintic oscillators"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Alvaro H. Salas", email = "ahsalass@unal.edu.co"}]
+keywords = ["Duffing oscillator", "cubic-quintic oscillator", "Jacobi elliptic functions",
+            "period computation", "nonlinear dynamics"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = ["numpy>=1.23", "scipy>=1.10", "mpmath>=1.2"]
+
+[project.optional-dependencies]
+test = ["pytest>=7", "pytest-cov>=4"]
+bench = ["matplotlib>=3.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = [
+  "unit: single-function tests against analytic or exact values",
+  "integration: multi-step workflows across modules",
+  "regression: pinned values from the published benchmarks and the Wolfram implementation",
+  "failure: documented failure modes (separatrix, unbounded, degenerate, invalid input)",
+  "slow: long-running tests (deselect with -m 'not slow')",
+]
+
+[tool.coverage.run]
+source = ["nonlinear_oscillator_lab"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
