@@ -1,8 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this research software, please cite this version and the accompanying paper."
 title: "NonlinearOscillatorLab"
-version: 0.2.1
-date-released: 2026-11-15
+version: 0.2.2
+doi: 10.5281/zenodo.24248864
+url: "https://doi.org/10.5281/zenodo.24248864"
+repository-code: "https://github.com/Cdacostam/NonlinearOscillatorLab"
 authors:
   - family-names: Salas
     given-names: Alvaro H.

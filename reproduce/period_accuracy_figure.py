@@ -2,8 +2,9 @@
 
 Panel (a): relative error of the machine-precision period for 8 families x 40 energies,
 Python `period` and Wolfram `NOLPeriodFromEnergy`, both against 40-digit references.
-The errors are read from data/wolfram/period_accuracy.csv (written by
-code_wl/MakeFigures.wls); errors below 1e-17 are shown at 1e-17, as in that file.
+The Python series is recomputed on the energies recorded in
+data/wolfram/period_accuracy.csv, which supplies the references and the archived
+Wolfram series. Errors below 1e-17 are shown at 1e-17.
 
 Panel (b): separatrix asymptotics of the double well x'' - x + x^3 = 0 (E_s = 0).
 For dE = 10^-k, k = 1, 1.5, ..., 16, the script computes with `period_mp` at 40 digits
@@ -15,7 +16,7 @@ The initial velocity is passed as a 60-digit decimal string, so that the energy 
 Run from the archive root after `python -m pip install ./code_py matplotlib`:
     python reproduce/period_accuracy_figure.py            # computes panel (b), a few seconds
     python reproduce/period_accuracy_figure.py --from-csv data/results/period_accuracy_panel_b.csv
-Outputs (reproduce/outputs/ or $NOL_OUTPUTS): period_accuracy_panel_b.csv,
+Outputs (reproduce/outputs/ or $NOL_OUTPUTS): period_accuracy_panel_a.csv, period_accuracy_panel_b.csv,
 fig6_period_accuracy.pdf and fig6_period_accuracy.png. Archived copies:
 data/results/period_accuracy_panel_b.csv and data/figures/fig6_period_accuracy.{pdf,png}.
 """
@@ -47,13 +48,33 @@ def as_float(s):
 
 
 def panel_a_data(path):
+    from baseline_comparison import FAMILIES as orbit_specs
+    from nonlinear_oscillator_lab import Model, period
+
     py = {f: [] for f in FAMILIES}
     wl = {f: [] for f in FAMILIES}
+    rows = []
+    ctx = mp.mp.clone()
+    ctx.dps = 50
     with open(path, newline="") as fh:
         for row in csv.DictReader(fh):
-            py[row["family"]].append(as_float(row["relerr_python_factored"]))
-            wl[row["family"]].append(as_float(row["relerr_wolfram_factored"]))
-    return py, wl
+            family = row["family"]
+            a, b, c, x0, _ = orbit_specs[family]
+            model = Model(a, b, c)
+            energy = as_float(row["E"])
+            v0 = float(np.sqrt(2 * (energy - model.potential(x0))))
+            ref = ctx.mpf(row["T_reference"].split(chr(96))[0].replace("*^", "e"))
+            t = period(model, x0, v0)
+            py_err = float(abs(ctx.mpf(t) - ref)/ref)
+            wl_err = as_float(row["relerr_wolfram_factored"])
+            py[family].append(py_err)
+            wl[family].append(wl_err)
+            rows.append(dict(family=family, E=energy, x0=x0, v0=v0, period_python=t,
+                             period_reference=ctx.nstr(ref, 42), error_python=py_err,
+                             error_wolfram_archived=wl_err))
+    if any(len(py[f]) != 40 for f in FAMILIES):
+        raise ValueError("Expected 40 records in each period family")
+    return py, wl, rows
 
 
 def panel_b_data():
@@ -98,8 +119,8 @@ def draw(py, wl, rows, stem):
     fig, (ax, bx) = plt.subplots(1, 2, figsize=(7.2, 3.3), gridspec_kw={"wspace": 0.28})
 
     rng = np.random.default_rng(1)
-    for off, data, col, lab in ((-0.14, py, ORANGE, "Python, factored integrand"),
-                                (0.14, wl, BLUE, "Wolfram, factored integrand")):
+    for off, data, col, lab in ((-0.14, py, ORANGE, "Python"),
+                                (0.14, wl, BLUE, "Wolfram Language")):
         xs, ys = [], []
         for k, f in enumerate(FAMILIES, start=1):
             v = np.maximum(np.asarray(data[f]), 1e-17)
@@ -150,7 +171,8 @@ def main():
     out = Path(os.environ.get("NOL_OUTPUTS", ROOT / "reproduce" / "outputs"))
     out.mkdir(parents=True, exist_ok=True)
 
-    py, wl = panel_a_data(args.accuracy_csv)
+    py, wl, panel_a = panel_a_data(args.accuracy_csv)
+    write_csv(panel_a, out / "period_accuracy_panel_a.csv")
     if args.from_csv:
         rows = read_csv(args.from_csv)
     else:
@@ -158,7 +180,7 @@ def main():
         write_csv(rows, out / "period_accuracy_panel_b.csv")
         print("wrote", out / "period_accuracy_panel_b.csv")
     draw(py, wl, rows, out / "fig6_period_accuracy")
-    allpy = np.concatenate([np.maximum(py[f], 1e-17) for f in FAMILIES])
+    allpy = np.concatenate([py[f] for f in FAMILIES])
     allwl = np.concatenate([np.maximum(wl[f], 1e-17) for f in FAMILIES])
     print(f"panel (a): Python median {np.median(allpy):.1e}, max {allpy.max():.1e}; "
           f"Wolfram median {np.median(allwl):.1e}, max {allwl.max():.1e}")

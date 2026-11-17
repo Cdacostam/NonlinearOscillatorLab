@@ -52,19 +52,38 @@ abs(cf.x(sim.t) - sim.y[0]).max()      # ~ 2e-12
 ```
 
 The representation label tells which family (I: $\mu=0$, II: $\mu\ne0$) and which Jacobi
-branch of the auxiliary Duffing solution $y$ were used. A $y$ that "blows up" is not an error:
-$x$ stays bounded because the denominator grows with $y$.
+branch of the auxiliary Duffing solution $y$ were used. A simple pole of $y$ can be
+continued in the original variable under the conditions in Proposition 1 of the paper.
+For $\mu>0$, use $w=1/y$ near the pole and the original map at finite $y$, including its zeros, with
+$D=1+\lambda y^2+\mu y^4>0$ on the finite part. For $\mu=0<\lambda$, the sign-fixed
+continuation requires $y$ to have no zeros on the interval. A zero of $D$ at finite $y$
+can end the representation. Check the interval before evaluating a returned candidate.
 
 ## 4. Failure handling
 
 ```python
-period(m, 0.0, (4/27)**0.5)       # ValueError: Separatrix energy: infinite period
-exact_solution(1, 1, -0.5, 0, 3)  # ClosedFormNotAvailable: no real representation
+from nonlinear_oscillator_lab import ClosedFormNotAvailable, Model, exact_solution, motion_type, period
+
+try:
+    period(m, 0.0, (4/27)**0.5)
+except ValueError as exc:
+    print(exc)  # Separatrix energy: infinite period
+
+try:
+    exact_solution(1, 1, -0.5, 0, 3)
+except ClosedFormNotAvailable as exc:
+    print(exc)  # No candidate representation passed the acceptance checks
+
+escaping = Model(1, -1, 0)
+assert motion_type(escaping, 1.5, 0) == "unbounded"
+cf_escape = exact_solution(escaping, 1.5, 0)
+assert abs(cf_escape.x(0.0) - 1.5) < 1e-8
 ```
 
-Every non-periodic or unsupported request raises an exception (Python) or returns a
-`Failure` object with a message (Wolfram Language). Nothing is silently approximated. See
-[troubleshooting](troubleshooting.md).
+A bounded periodic component is required by `period`. `exact_solution` screens a
+different set of conditions, and it can return representations for some unbounded
+orbits, as in the last example. Resolve an ill-conditioned period in higher precision
+with `period_mp`. See [troubleshooting](troubleshooting.md).
 
 ## 5. Damped and forced response (numerical extension)
 

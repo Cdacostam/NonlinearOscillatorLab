@@ -40,6 +40,64 @@ def test_stationary_points(a, b, c, expected):
     assert np.allclose(stationary_points(Model(a, b, c)), expected)
 
 
+def test_stationary_discriminant_and_critical_motion():
+    model = Model(1, -2, 1)
+    v = np.sqrt(1 / 3)
+    geometry = classify_energy(model, 0, v)
+    assert geometry["equilibria"] == [-1, 0, 1]
+    assert geometry["maxima"] == []
+    assert [x for x, _ in geometry["minima"]] == [0]
+    assert [x for x, _ in geometry["degenerate"]] == [-1, 1]
+    assert motion_type(model, 0, v) == "separatrix"
+    assert motion_type(model, 1, 0) == "equilibrium"
+    for measure in (period, period_mp):
+        with pytest.raises(ValueError, match="Separatrix energy"):
+            measure(model, 0, v)
+    assert len(stationary_points(Model(np.nextafter(1., 0.), -2, 1))) == 5
+    assert len(stationary_points(Model(np.nextafter(1., 2.), -2, 1))) == 1
+
+    assert np.allclose(stationary_points(Model(-1e100, 1e100, 1e-300)), [-1, 0, 1])
+    wide = stationary_points(Model(1e100, 0, -1e-300))
+    assert np.allclose(wide, [-1e100, 0, 1e100])
+
+    # Non-binary coefficients and an exactly repeated stationary point at x=5/3.
+    exact = Model("1.25", "-0.9", Fr(81, 500))
+    with pytest.raises(ValueError, match="Separatrix energy"):
+        period_mp(exact, 0, "1.075828707279838", dps=40)
+
+
+def test_representable_wide_barrier_and_explicit_energy_overflow():
+    model = Model(1, 0, -1e-220)
+    barrier_energy = 1e110/3
+    maxima = classify_energy(model, 0, 1)["maxima"]
+    assert [x for x, _ in maxima] == pytest.approx([-1e55, 1e55])
+    assert [e for _, e in maxima] == pytest.approx([barrier_energy]*2, rel=1e-14)
+    assert np.allclose(model.potential([[0, 1e55], [-1e55, 0]]),
+                       [[0, barrier_energy], [barrier_energy, 0]], rtol=1e-14)
+    outside_range = Model(1e130, 0, -1e-310)
+    with pytest.raises(ValueError, match="Stationary energy outside"):
+        classify_energy(outside_range, 0, 1)
+    with pytest.raises(ValueError, match="Initial energy outside"):
+        classify_energy(Model(1, 0, 1), 1e100, 1)
+
+
+def test_fraction_coordinates_in_potential_and_period():
+    model = Model(4, 0, 0)
+    x = Fr(2, 5)
+    energy = model.potential(0.4)
+    assert model.potential(x) == energy
+    np.testing.assert_array_equal(model.potential([x, -x]), [energy, energy])
+    coords = np.array([[x, -x], [Fr(1, 5), 0]], dtype=object)
+    np.testing.assert_array_equal(model.potential(coords), model.potential(coords.astype(float)))
+    rational_model = Model(4, 0, Fr(1, 3))
+    np.testing.assert_array_equal(rational_model.potential(coords), Model(4, 0, 1/3).potential(coords.astype(float)))
+    assert model.energy(x, 0) == energy
+    assert classify_energy(model, x, 0) == classify_energy(model, 0.4, 0)
+    assert period(model, x, 0) == pytest.approx(np.pi, rel=1e-14)
+    with mp.workdps(55):
+        assert abs(period_mp(model, x, 0, dps=50) - mp.pi) < mp.mpf("1e-49")
+
+
 def test_turning_points_are_roots():
     m = Model(1, -4, 3)
     for E in (0.02, 0.07, 0.1, 1.0):

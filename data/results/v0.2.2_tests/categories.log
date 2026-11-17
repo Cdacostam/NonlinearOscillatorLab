@@ -1,0 +1,8 @@
+unit
+77/171 tests collected (94 deselected) in 0.36s
+regression
+63/171 tests collected (108 deselected) in 0.35s
+failure
+27/171 tests collected (144 deselected) in 0.35s
+integration
+4/171 tests collected (167 deselected) in 0.35s

@@ -1,11 +1,11 @@
 """Write Python-side benchmark periods for cross-implementation checks.
 
-Output: reproduce/outputs/python_periods.csv, copied to benchmarks/python_periods.csv,
-which code_wl/RunTests.wls and code_wl/MakeFigures.wls read.
+Output: reproduce/outputs/python_periods.csv (or NOL_OUTPUTS), including\ncomparison with period_mp at 40 digits from the same binary inputs.
 """
 from pathlib import Path
 import csv
-from nonlinear_oscillator_lab import Model, period, simulate, energy_drift
+import mpmath as mp
+from nonlinear_oscillator_lab import Model, period, period_mp, simulate, energy_drift
 
 CASES = [
     # id, a, b, c, x0, v0, description
@@ -22,12 +22,18 @@ CASES = [
 
 out = Path(__import__("os").environ.get("NOL_OUTPUTS", Path(__file__).resolve().parent / "outputs")) / "python_periods.csv"
 out.parent.mkdir(parents=True, exist_ok=True)
+ctx = mp.mp.clone()
+ctx.dps = 50
 with out.open("w", newline="") as f:
     w = csv.writer(f)
-    w.writerow(["id", "a", "b", "c", "x0", "v0", "period", "energy_drift_T40", "description"])
+    w.writerow(["id", "a", "b", "c", "x0", "v0", "period", "energy_drift_T40", "description",
+                "period_mp40_binary", "relative_difference_binary"])
     for cid, a, b, c, x0, v0, d in CASES:
         m = Model(a, b, c)
         T = period(m, x0, v0)
         s = simulate(m, x0, v0, t_end=40.0, n=4001)
-        w.writerow([cid, a, b, c, x0, v0, repr(T), repr(energy_drift(m, s)), d])
+        ref = period_mp(m, x0, v0, dps=40)
+        difference = abs(ctx.mpf(T)-ref)/ref
+        w.writerow([cid, a, b, c, x0, v0, repr(T), repr(energy_drift(m, s)), d,
+                    ctx.nstr(ref, 42), float(difference)])
 print("wrote", out)

@@ -5,6 +5,9 @@ by numerical quadrature of the factored, singularity-free integrand
 obtained from E - V(x) = (x - x_-)(x_+ - x) Q(x) and x = mid + half*sin(theta).
 """
 from dataclasses import dataclass
+from decimal import Decimal, localcontext
+from fractions import Fraction
+from math import isfinite, sqrt
 import numpy as np
 from scipy.integrate import solve_ivp, quad
 
@@ -16,7 +19,30 @@ class Model:
 
     def potential(self, x):
         x = np.asarray(x)
-        return 0.5*self.a*x*x + 0.25*self.b*x**4 + self.c*x**6/6
+        # Fraction coordinates arrive in object arrays.
+        if x.dtype.kind in "biuO":
+            x = x.astype(float)
+        c = float(self.c) if isinstance(self.c, Fraction) else self.c
+        with np.errstate(over="ignore", invalid="ignore"):
+            value = 0.5*self.a*x*x + 0.25*self.b*x**4 + c*x**6/6
+        if value.ndim == 0 and np.isfinite(value):
+            return value
+        retry = ~np.isfinite(value) & np.isfinite(x)
+        if not np.any(retry) or not all(isfinite(k) for k in (self.a, self.b, self.c)):
+            return value
+
+        # Recover finite potentials when an unscaled power overflows before
+        # multiplication by its coefficient. Round the binary-input polynomial once.
+        a, b, c = map(lambda k: Fraction(float(k)), (self.a, self.b, self.c))
+        value = np.array(value, dtype=np.result_type(value.dtype, np.float64), copy=True)
+        for index in np.flatnonzero(retry):
+            y = Fraction(float(x.flat[index]))**2
+            exact = y*(a/2 + y*(b/4 + y*c/6))
+            try:
+                value.flat[index] = float(exact)
+            except OverflowError:
+                value.flat[index] = np.inf if exact > 0 else -np.inf
+        return value[()] if value.ndim == 0 else value
 
     def force(self, x):
         return -(self.a*x+self.b*x**3+self.c*x**5)
@@ -25,18 +51,58 @@ class Model:
         return 0.5*np.asarray(v)**2+self.potential(x)
 
 
+def _stationary_sq_roots(a, b, c, number, square_root):
+    """Pairs (y, d(a + by + cy²)/dy) for the real roots in y."""
+    if c == 0:
+        return [(number(-a / b), number(b))] if b else []
+    discriminant = b*b - 4*a*c
+    if discriminant < 0:
+        return []
+    if discriminant == 0:
+        return [(number(-b / (2*c)), number(0))]
+
+    # Take the sign with exact coefficients; scale before converting, then
+    # recover the second root by Vieta to avoid subtracting close numbers.
+    scale = max(abs(a), abs(b), abs(c))
+    d = square_root(number(discriminant / scale**2))
+    sign = 1 if b >= 0 else -1
+    q = -(number(b / scale) + sign*d)/2
+    return [(q / number(c / scale), -sign*d*number(scale)),
+            (number(a / scale) / q, sign*d*number(scale))]
+
+
+def _stationary_geometry(model, tol=1e-10):
+    a, b, c = (Fraction(float(x)) for x in (model.a, model.b, model.c))
+    try:
+        roots = _stationary_sq_roots(a, b, c, float, sqrt)
+        if not all(isfinite(y) and isfinite(slope) for y, slope in roots):
+            raise OverflowError("Stationary geometry outside binary64 scale")
+        positive = [(sqrt(y), 2*y*slope) for y, slope in roots if y > tol]
+    except (OverflowError, ZeroDivisionError):
+        # An extreme coefficient ratio may underflow in the scaled quadratic
+        # even when a physical stationary position is finite.
+        with localcontext() as ctx:
+            ctx.prec = 40
+
+            def decimal(value):
+                return Decimal(value.numerator) / Decimal(value.denominator)
+
+            roots = _stationary_sq_roots(a, b, c, decimal, ctx.sqrt)
+            positive = [(float(y.sqrt()), float(2*y*slope)) for y, slope in roots if y > tol]
+
+    points = [(0.0, float(a))]
+    for x, curvature in positive:
+        # At a stationary point with x != 0, V''(x) = 2 y (b + 2 c y).
+        points.extend([(-x, curvature), (x, curvature)])
+    return sorted(points)
+
+
 def stationary_points(model, tol=1e-10):
-    """Return sorted real roots of dV/dx, including zero."""
-    roots=[0.0]
-    # c y^2 + b y + a = 0, with y=x^2>0
-    coefficients=[model.c,model.b,model.a]
-    while len(coefficients)>1 and abs(coefficients[0])<tol:
-        coefficients.pop(0)
-    if len(coefficients)>1:
-        for y in np.roots(coefficients):
-            if abs(y.imag)<tol and y.real>tol:
-                z=float(np.sqrt(y.real));roots.extend([-z,z])
-    return np.array(sorted(set(round(x,12) for x in roots)))
+    """Return sorted stationary positions, including zero and each repeated root once.
+
+    Nonzero points are retained when their squared position exceeds tol.
+    """
+    return np.array([x for x, _ in _stationary_geometry(model, tol)])
 
 
 def classify_energy(model, x0, v0, tol=1e-9):
@@ -45,16 +111,19 @@ def classify_energy(model, x0, v0, tol=1e-9):
     Labels are descriptive; `bounded_component` is not inferred merely from E.
     """
     E=float(model.energy(x0,v0))
-    eq=stationary_points(model)
-    curv=lambda x: model.a+3*model.b*x*x+5*model.c*x**4
-    barriers=[(float(x),float(model.potential(x))) for x in eq if curv(x) < -tol]
-    minima=[(float(x),float(model.potential(x))) for x in eq if curv(x) > tol]
-    # degenerate equilibria (V''=0, e.g. inflection points when b^2 = 4ac) are
-    # approached asymptotically like saddles: their energy level is also critical
-    degenerate=[(float(x),float(model.potential(x))) for x in eq if abs(curv(x)) <= tol]
-    at_barrier=any(abs(E-eb)<tol*(1+abs(eb)) for _,eb in barriers+degenerate)
-    return {'energy': E,'equilibria':eq.tolist(),'maxima':barriers,'minima':minima,
-            'degenerate':degenerate,'on_separatrix_energy': bool(at_barrier)}
+    if not isfinite(E):
+        raise ValueError("Initial energy outside the finite range of double precision")
+    eq = _stationary_geometry(model)
+    barriers, minima, degenerate = [], [], []
+    for x, curvature in eq:
+        target = barriers if curvature < -tol else minima if curvature > tol else degenerate
+        eb = float(model.potential(x))
+        if not isfinite(eb):
+            raise ValueError("Stationary energy outside the finite range of double precision")
+        target.append((x, eb))
+    at_barrier = any(abs(E-eb) < tol*(1+abs(eb)) for _, eb in barriers + degenerate)
+    return {'energy': E, 'equilibria': [x for x, _ in eq], 'maxima': barriers,
+            'minima': minima, 'degenerate': degenerate, 'on_separatrix_energy': at_barrier}
 
 
 def turning_points(model, E, tol=1e-9):
@@ -103,8 +172,7 @@ def _admissible_interval(model, x0, E, tol):
 def _near_minimum(model, x0, E, tol):
     """Non-degenerate minimum x_m whose energy lies within tol of E, with x0 inside the
     corresponding tiny well (oscillation amplitude below about sqrt(tol)); else None."""
-    for xm in stationary_points(model):
-        k = model.a + 3*model.b*xm*xm + 5*model.c*xm**4
+    for xm, k in _stationary_geometry(model):
         if k > tol:
             Vm = float(model.potential(xm))
             if -tol*(1+abs(Vm)) <= E - Vm <= tol*(1+abs(Vm)) and \
@@ -139,51 +207,77 @@ def _deflate(model, p, left, right, E):
     return qb if resid(qb) < rf else qf
 
 
+def _resolved_period_quotient(q, left, right):
+    """Screen the endpoint and interior minima of the computed quotient."""
+    nodes = [left, right]
+    try:
+        roots = np.roots(np.polyder(q))
+    except (ValueError, np.linalg.LinAlgError):
+        return False
+    for z in roots:
+        if left < z.real < right and abs(z.imag) <= sqrt(_EPS) * (1 + abs(z.real)):
+            nodes.append(float(z.real))
+    q_at_nodes = np.polyval(q, nodes)
+    scale = np.polyval(np.abs(q), np.abs(nodes))
+    return np.all(np.isfinite(scale) & (q_at_nodes > 64*_EPS*scale))
+
+
 def period(model, x0, v0, *, tol=1e-9):
     """Period in the connected bounded admissible component containing x0.
 
     Returns np.inf for equilibrium and raises ValueError for non-closed
-    or separatrix trajectories. Period=2*integral dx/sqrt(2*(E-V(x))).
+    or separatrix trajectories. An unresolved or unconverged double-precision
+    quadrature raises ValueError with a referral to period_mp.
     """
-    E=float(model.energy(x0,v0))
     if abs(v0)<tol and abs(float(model.force(x0)))<tol:
         return float('inf')
-    if classify_energy(model,x0,v0,tol)['on_separatrix_energy']:
+    geometry = classify_energy(model, x0, v0, tol)
+    if geometry['on_separatrix_energy']:
         raise ValueError('Separatrix energy: infinite period')
-    comp=_admissible_interval(model,x0,E,tol)
+    E = geometry['energy']
+    comp = _admissible_interval(model, x0, E, tol)
     if comp is None:
-        nm=_near_minimum(model,x0,E,tol)
+        nm = _near_minimum(model, x0, E, tol)
         if nm is not None:
             # amplitude below ~sqrt(tol): harmonic limit, relative error O(tol)
             return float(2*np.pi/np.sqrt(nm[1]))
         raise ValueError('Initial state is not in a verified bounded component')
-    pairs=[comp]
-    left,right=pairs[0]; center=(right+left)/2; half=(right-left)/2
-    # simple turning points are required: a turning point that coincides with an
-    # equilibrium is a multiple root of E - V (infinite period)
-    for xt in (left,right):
-        if any(abs(xt-xe) <= tol*(1+abs(xe)) for xe in stationary_points(model)):
+    left, right = comp
+    center, half = (right+left)/2, (right-left)/2
+    stationary = geometry['equilibria']
+    for xt in (left, right):
+        if any(abs(xt-xe) <= tol*(1+abs(xe)) for xe in stationary):
             raise ValueError('Degenerate (multiple) turning point: period not finite')
-    # Factor E - V(x) = (x - left)(right - x) Q(x).  With x = center + half*sin(theta),
-    # dx/sqrt(2(E-V)) = dtheta/sqrt(2 Q(x)): the integrand is smooth and nonsingular.
-    p=np.array([-model.c/6,0.,-model.b/4,0.,-model.a/2,0.,E])
-    while len(p)>1 and p[0]==0: p=p[1:]
-    q=_deflate(model,p,left,right,E)
+
+    # E - V = (x - left)(right - x) Q(x), with dx/sqrt(2(E-V)) = dtheta/sqrt(2 Q).
+    p = np.array([-model.c/6, 0., -model.b/4, 0., -model.a/2, 0., E])
+    while len(p) > 1 and p[0] == 0:
+        p = p[1:]
+    q = _deflate(model, p, left, right, E)
+    resolution_error = 'Period unresolved in double precision; use period_mp with the same inputs'
+    if not np.all(np.isfinite(q)) or not _resolved_period_quotient(q, left, right):
+        raise ValueError(resolution_error)
+
     def integrand(theta):
-        qx=float(np.polyval(q,center+half*np.sin(theta)))
-        if qx<=0:
-            raise ValueError('Degenerate turning point: period quadrature not regular')
+        qx = float(np.polyval(q, center + half*np.sin(theta)))
+        if qx <= 0:
+            raise ValueError(resolution_error)
         return 1.0/np.sqrt(2*qx)
-    # Near a separatrix the integrand peaks where the orbit crosses a barrier
-    # (a local maximum of V); split the quadrature there.
-    cuts=sorted(float(np.arcsin((xe-center)/half)) for xe in stationary_points(model)
-                if left<xe<right)
-    nodes=[-np.pi/2]+cuts+[np.pi/2]
-    val=sum(quad(integrand,lo,hi,epsabs=1e-14,epsrel=1e-13,limit=400)[0]
-            for lo,hi in zip(nodes[:-1],nodes[1:]) if hi>lo)
-    if not np.isfinite(val) or val<=0:
-        raise ValueError('Period quadrature failed')
-    return float(2*val)
+
+    # Split at potential extrema near separatrices. QUADPACK adds a message
+    # to full_output when a call does not converge to the requested tolerance.
+    cuts = sorted(float(np.arcsin((xe-center)/half)) for xe in stationary if left < xe < right)
+    nodes = [-np.pi/2] + cuts + [np.pi/2]
+    total = 0.0
+    for lo, hi in zip(nodes[:-1], nodes[1:]):
+        if hi > lo:
+            result = quad(integrand, lo, hi, epsabs=1e-14, epsrel=1e-13, limit=400, full_output=1)
+            if len(result) != 3:
+                raise ValueError(resolution_error)
+            total += result[0]
+    if not isfinite(total) or total <= 0:
+        raise ValueError(resolution_error)
+    return float(2*total)
 
 
 def simulate(model, x0, v0, t_end=40., n=2001, rtol=1e-10, atol=1e-12):
@@ -231,7 +325,6 @@ def period_mp(model, x0, v0, *, dps=50, tol=1e-9):
     ``mpmath.mpf`` correct to about ``dps`` digits.
     """
     import mpmath as mp
-    from fractions import Fraction
     ctx = mp.mp.clone()
     ctx.dps = int(dps) + 20
 
@@ -239,7 +332,9 @@ def period_mp(model, x0, v0, *, dps=50, tol=1e-9):
         if isinstance(v, Fraction):
             return ctx.mpf(v.numerator) / v.denominator
         return ctx.mpf(v) if isinstance(v, (str, int)) else ctx.mpf(float(v))
-    a, b, c = (num(getattr(model, k)) for k in ('a', 'b', 'c'))
+    coefficients = tuple(Fraction(v if isinstance(v, (str, int, Fraction)) else float(v))
+                         for v in (model.a, model.b, model.c))
+    a, b, c = map(num, coefficients)
     x0, v0 = num(x0), num(v0)
 
     def V(x):
@@ -261,9 +356,14 @@ def period_mp(model, x0, v0, *, dps=50, tol=1e-9):
                 z = ctx.sqrt(y.real)
                 xs.extend([-z, z] if z > 0 else [ctx.zero])
         return sorted(xs)
-    eq = sorted(set(real_sq_roots([c, b, a]) + [ctx.zero]))
-    for xe in eq:
-        if a + 3 * b * xe ** 2 + 5 * c * xe ** 4 <= tol and abs(E - V(xe)) <= tol * (1 + abs(V(xe))):
+    equilibria = [(ctx.zero, a)]
+    for y, slope in _stationary_sq_roots(*coefficients, num, ctx.sqrt):
+        if y > 0:
+            x = ctx.sqrt(y)
+            equilibria.extend([(-x, 2*y*slope), (x, 2*y*slope)])
+    eq = sorted(x for x, _ in equilibria)
+    for xe, curvature in equilibria:
+        if curvature <= tol and abs(E - V(xe)) <= tol * (1 + abs(V(xe))):
             raise ValueError('Separatrix energy: infinite period')
     roots = real_sq_roots([c / 6, b / 4, a / 2, -E])
     gap_tol = ctx.mpf(10) ** (-int(dps) - 10)

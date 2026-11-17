@@ -1,0 +1,230 @@
+{
+  "n": 30,
+  "ratio_n": 30,
+  "ratio_median": 19.623627189190625,
+  "ratio_min": 1.3167961337356142,
+  "ratio_max": 412.60086767895876,
+  "err_dop853_median": 5.809033809534014e-13,
+  "err_mp32bin_median": 1.3836154444391013e-14,
+  "max_ref_disagreement": 8.682077279331679e-11,
+  "rows": [
+    {
+      "case_id": 28,
+      "group": "R200",
+      "err_dop853": 1.3256895581292838e-12,
+      "err_mp32bin": 3.319566843629218e-14,
+      "ref_disagreement": 1.3405943022348765e-12
+    },
+    {
+      "case_id": 30,
+      "group": "R200",
+      "err_dop853": 2.1719293030741937e-12,
+      "err_mp32bin": 3.8413716652030416e-14,
+      "ref_disagreement": 2.1598278721057795e-12
+    },
+    {
+      "case_id": 71,
+      "group": "R200",
+      "err_dop853": 8.755174363273e-11,
+      "err_mp32bin": 7.451816941284051e-13,
+      "ref_disagreement": 8.682077279331679e-11
+    },
+    {
+      "case_id": 148,
+      "group": "R200",
+      "err_dop853": 2.6418797705041186e-13,
+      "err_mp32bin": 1.3405943022348765e-14,
+      "ref_disagreement": 2.581580782479165e-13
+    },
+    {
+      "case_id": 181,
+      "group": "R200",
+      "err_dop853": 3.4916514124461173e-14,
+      "err_mp32bin": 5.442694905877232e-15,
+      "ref_disagreement": 3.241851231905457e-14
+    },
+    {
+      "case_id": 300,
+      "group": "RWIDE",
+      "err_dop853": 3.448352714485736e-13,
+      "err_mp32bin": 7.438494264988549e-15,
+      "ref_disagreement": 3.446132268436486e-13
+    },
+    {
+      "case_id": 323,
+      "group": "RWIDE",
+      "err_dop853": 3.923528169025303e-13,
+      "err_mp32bin": 1.2101430968414206e-13,
+      "ref_disagreement": 2.7844393457598926e-13
+    },
+    {
+      "case_id": 327,
+      "group": "RWIDE",
+      "err_dop853": 8.446976451637056e-11,
+      "err_mp32bin": 2.0472512574087887e-13,
+      "ref_disagreement": 8.456391142885877e-11
+    },
+    {
+      "case_id": 384,
+      "group": "RWIDE",
+      "err_dop853": 5.352940313230192e-12,
+      "err_mp32bin": 4.39648317751562e-14,
+      "ref_disagreement": 5.34412791797223e-12
+    },
+    {
+      "case_id": 560,
+      "group": "RWIDE",
+      "err_dop853": 6.913913885853162e-14,
+      "err_mp32bin": 1.426636586643326e-14,
+      "ref_disagreement": 7.11375403028569e-14
+    },
+    {
+      "case_id": 593,
+      "group": "RWIDE",
+      "err_dop853": 7.655542866302767e-13,
+      "err_mp32bin": 1.2878587085651816e-14,
+      "ref_disagreement": 7.683853553430708e-13
+    },
+    {
+      "case_id": 628,
+      "group": "RWIDE",
+      "err_dop853": 4.135802811333633e-12,
+      "err_mp32bin": 2.7704505356496156e-12,
+      "ref_disagreement": 1.3653522756840175e-12
+    },
+    {
+      "case_id": 642,
+      "group": "RWIDE",
+      "err_dop853": 8.054668043655511e-14,
+      "err_mp32bin": 5.731526364627371e-15,
+      "ref_disagreement": 7.743805596760467e-14
+    },
+    {
+      "case_id": 652,
+      "group": "RWIDE",
+      "err_dop853": 5.157652083198627e-12,
+      "err_mp32bin": 1.4166445794216997e-13,
+      "ref_disagreement": 5.197620112085133e-12
+    },
+    {
+      "case_id": 717,
+      "group": "RWIDE",
+      "err_dop853": 3.0309088572266774e-14,
+      "err_mp32bin": 6.314393452555578e-15,
+      "ref_disagreement": 3.0142555118573e-14
+    },
+    {
+      "case_id": 737,
+      "group": "RWIDE",
+      "err_dop853": 6.400435736964027e-14,
+      "err_mp32bin": 7.577272143066693e-15,
+      "ref_disagreement": 6.372680161348399e-14
+    },
+    {
+      "case_id": 751,
+      "group": "RWIDE",
+      "err_dop853": 2.141709032343897e-11,
+      "err_mp32bin": 1.6264545266153618e-11,
+      "ref_disagreement": 5.1525450572853515e-12
+    },
+    {
+      "case_id": 808,
+      "group": "RWIDE",
+      "err_dop853": 7.069345109300684e-14,
+      "err_mp32bin": 3.941291737419306e-15,
+      "ref_disagreement": 6.941669461468791e-14
+    },
+    {
+      "case_id": 826,
+      "group": "RWIDE",
+      "err_dop853": 6.123990203832363e-13,
+      "err_mp32bin": 1.0969003483296547e-13,
+      "ref_disagreement": 6.068479052601106e-13
+    },
+    {
+      "case_id": 879,
+      "group": "RWIDE",
+      "err_dop853": 6.875500169201132e-12,
+      "err_mp32bin": 2.2426505097428162e-14,
+      "ref_disagreement": 6.867395541121368e-12
+    },
+    {
+      "case_id": 920,
+      "group": "RWIDE",
+      "err_dop853": 1.1124434706744069e-13,
+      "err_mp32bin": 2.3619994848900205e-14,
+      "ref_disagreement": 1.1524114995609125e-13
+    },
+    {
+      "case_id": 985,
+      "group": "RWIDE",
+      "err_dop853": 1.304512053934559e-13,
+      "err_mp32bin": 7.049916206369744e-15,
+      "ref_disagreement": 1.31117339208231e-13
+    },
+    {
+      "case_id": 1052,
+      "group": "RWIDE",
+      "err_dop853": 3.630429290524262e-14,
+      "err_mp32bin": 5.9119376061289586e-15,
+      "ref_disagreement": 3.5915714846623814e-14
+    },
+    {
+      "case_id": 1126,
+      "group": "RWIDE",
+      "err_dop853": 5.494077415235665e-13,
+      "err_mp32bin": 2.811639809863209e-14,
+      "ref_disagreement": 5.638128852680779e-13
+    },
+    {
+      "case_id": 1165,
+      "group": "RWIDE",
+      "err_dop853": 1.297184581972033e-12,
+      "err_mp32bin": 8.215650382226158e-15,
+      "ref_disagreement": 1.297184581972033e-12
+    },
+    {
+      "case_id": 1172,
+      "group": "RWIDE",
+      "err_dop853": 1.695532603207539e-12,
+      "err_mp32bin": 5.062616992290714e-14,
+      "ref_disagreement": 1.7174039967926547e-12
+    },
+    {
+      "case_id": 1192,
+      "group": "RWIDE",
+      "err_dop853": 3.530509218307998e-14,
+      "err_mp32bin": 5.509481759702339e-15,
+      "ref_disagreement": 3.036459972349803e-14
+    },
+    {
+      "case_id": 1290,
+      "group": "SEP",
+      "err_dop853": 8.788525462932739e-13,
+      "err_mp32bin": 7.549516567451064e-15,
+      "ref_disagreement": 8.79296635503124e-13
+    },
+    {
+      "case_id": 1323,
+      "group": "REP",
+      "err_dop853": 8.615105157039338e-13,
+      "err_mp32bin": 2.437286483747414e-15,
+      "ref_disagreement": 8.590732292201864e-13
+    },
+    {
+      "case_id": 1328,
+      "group": "REP",
+      "err_dop853": 1.0572098751993053e-13,
+      "err_mp32bin": 3.4139358007223564e-15,
+      "ref_disagreement": 1.046315811770171e-13
+    }
+  ],
+  "_meta": {
+    "seed": 20261114,
+    "python": "3.15.1",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "mpmath": "1.3.0"
+  }
+}

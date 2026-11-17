@@ -1,0 +1,24 @@
+0  embedded LaTeX vs sources:
+   appB_PhiPsi.tex identical to embedded copy: True
+   appB_sextic.tex identical to embedded copy: True
+   appB_G.tex identical to embedded copy: True
+   appB_W.tex identical to embedded copy: True
+1  float, 300 problems (a,b,c in [-2,2], x0,v0 in [-1.2,1.2], seed 7):
+   family II, '+' branch (3 per problem): max rel. residual Phi 6.5e-15, Psi 2.1e-15
+   family II, '-' branch (3 per problem): max rel. residual Phi 6.3e-07, Psi 5.3e-07  (s ~ x0^-4: ill-conditioned in double precision, cf. Section B.1)
+   family II values in the printed sextic: median rel. residual 3.7e-16, 95th pct 4.2e-13, max 2.3e-07
+   family I: max rel. residual of Psi(lambda, 0) 1.4e-15
+2-3  exact rational arithmetic, 4 random rational problems (seed 11):
+   problem 1: (a,b,c,x0,C0) = (-16/7, -16/7, 13/7, 1/7, 4/7)
+      Res_mu(Phi, Psi) = const * sextic: True   (const = 64/96889010407)
+      discriminant == printed factorization: True
+   problem 2: (a,b,c,x0,C0) = (4/7, 9/7, -20/7, -1/7, -15/7)
+      Res_mu(Phi, Psi) = const * sextic: True   (const = -240/96889010407)
+      discriminant == printed factorization: True
+   problem 3: (a,b,c,x0,C0) = (-4/7, 18/7, 2/7, -18/7, 2/7)
+      Res_mu(Phi, Psi) = const * sextic: True   (const = 37018604205637632/96889010407)
+      discriminant == printed factorization: True
+   problem 4: (a,b,c,x0,C0) = (-16/7, 11/7, 19/7, 3, 5/7)
+      Res_mu(Phi, Psi) = const * sextic: True   (const = 42515280/7)
+      discriminant == printed factorization: True
+PASS

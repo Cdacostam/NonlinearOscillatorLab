@@ -1,0 +1,29 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.15.1, pytest-9.2.0, pluggy-1.7.0
+rootdir: /private/tmp/nol-fraction-wheel.mHZC65/code_py
+configfile: pyproject.toml
+plugins: cov-7.1.0, anyio-4.15.1, platformdirs-4.13.5
+collected 171 items
+
+code_py/tests/test_failure_modes.py ........................             [ 14%]
+code_py/tests/test_regression_integration.py ........................... [ 29%]
+...................................                                      [ 50%]
+code_py/tests/test_unit_core.py ...............                          [ 59%]
+code_py/tests/test_unit_extended.py .................................... [ 80%]
+..........................                                               [ 95%]
+code_py/tests/test_v021_corrections.py ........                          [100%]
+
+-------- generated xml file: /tmp/nol-fraction-wheel.mHZC65/pytest.xml ---------
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.15.1-final-0 _______________
+
+Name                                                Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------------------------------
+installed/nonlinear_oscillator_lab/__init__.py          5      0      0      0   100%
+installed/nonlinear_oscillator_lab/closed_form.py     300     21     78     14    90%   50, 161, 183-188, 216, 220, 252, 254, 327-328, 389, 390->394, 393, 413-414, 418-419, 433, 437->446, 441->437
+installed/nonlinear_oscillator_lab/core.py            273      9    116     10    95%   79, 196, 215-216, 250, 259, 264, 273->272, 279, 285->exit, 289->exit, 350
+installed/nonlinear_oscillator_lab/forced.py           37      3     10      3    87%   44, 51, 70
+-----------------------------------------------------------------------------------------------
+TOTAL                                                 615     33    204     27    92%
+Coverage JSON written to file /tmp/nol-fraction-wheel.mHZC65/coverage.json
+============================= 171 passed in 14.77s =============================

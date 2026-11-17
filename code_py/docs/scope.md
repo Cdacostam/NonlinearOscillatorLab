@@ -1,6 +1,6 @@
 # Scope, target users and roadmap
 
-## In scope (v0.2.1)
+## In scope (v0.2.2)
 
 * Autonomous conservative oscillators $\ddot x+ax+bx^3+cx^5=0$ with arbitrary real $a,b,c$:
   energy geometry, motion classification, periods (double and arbitrary precision),
@@ -29,6 +29,5 @@
 
 The package is maintained by the author (Universidad Nacional de Colombia). Policy:
 semantic versioning; every release is archived with a DOI and listed in
-`CHANGELOG.md`; bug reports are answered by the author; the CI must pass on Python
-3.10–3.13 before a release; supported Python versions follow the NumPy/SciPy support
+`CHANGELOG.md`; bug reports are answered by the author; contributors run the local Python tests before submitting changes; supported versions follow the NumPy/SciPy support
 window. See `CONTRIBUTING.md`.

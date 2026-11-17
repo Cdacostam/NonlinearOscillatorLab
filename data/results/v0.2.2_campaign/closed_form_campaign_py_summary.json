@@ -1,0 +1,129 @@
+{
+  "R200": {
+    "cases": 200,
+    "represented": 200,
+    "failure_reasons": {},
+    "by_motion": {
+      "bounded": {
+        "cases": 200,
+        "represented": 200
+      }
+    },
+    "err_median": 6.53560539021214e-13,
+    "err_p95": 4.4174131019758464e-11,
+    "err_max": 2.1249970671988194e-09,
+    "frac_below_1e8": 1.0,
+    "nonfinite": 0,
+    "mp25_rechecks": 29,
+    "build_median_ms": 9.86454150006466,
+    "labels_agree_with_wolfram": 200
+  },
+  "RWIDE": {
+    "cases": 1000,
+    "represented": 745,
+    "failure_reasons": {
+      "No candidate representation passed the acceptance checks | motion=unbounded": 255
+    },
+    "by_motion": {
+      "bounded": {
+        "cases": 745,
+        "represented": 745
+      },
+      "unbounded": {
+        "cases": 255,
+        "represented": 0
+      }
+    },
+    "err_median": 6.374623051641493e-13,
+    "err_p95": 3.66181751587646e-11,
+    "err_max": 5.349043430413758e-09,
+    "frac_below_1e8": 1.0,
+    "nonfinite": 0,
+    "mp25_rechecks": 106,
+    "build_median_ms": 8.525687499059131
+  },
+  "SEP": {
+    "cases": 120,
+    "represented": 120,
+    "failure_reasons": {},
+    "by_motion": {
+      "bounded": {
+        "cases": 80,
+        "represented": 80
+      },
+      "separatrix": {
+        "cases": 40,
+        "represented": 40
+      }
+    },
+    "err_median": 1.5281109710940655e-12,
+    "err_p95": 3.568580320134629e-10,
+    "err_max": 3.5667624409541077e-09,
+    "frac_below_1e8": 1.0,
+    "nonfinite": 0,
+    "mp25_rechecks": 70,
+    "build_median_ms": 12.993563000236463
+  },
+  "REP": {
+    "cases": 40,
+    "represented": 40,
+    "failure_reasons": {},
+    "by_motion": {
+      "bounded": {
+        "cases": 34,
+        "represented": 34
+      },
+      "equilibrium": {
+        "cases": 6,
+        "represented": 6
+      }
+    },
+    "err_median": 1.1574075031717257e-14,
+    "err_p95": 8.606354344464773e-13,
+    "err_max": 2.6654477236487395e-12,
+    "frac_below_1e8": 1.0,
+    "nonfinite": 0,
+    "mp25_rechecks": 0,
+    "build_median_ms": 5.0676464998105075
+  },
+  "UNB": {
+    "cases": 76,
+    "represented": 56,
+    "failure_reasons": {
+      "No candidate representation passed the acceptance checks | motion=unbounded": 20
+    },
+    "by_motion": {
+      "bounded": {
+        "cases": 24,
+        "represented": 24
+      },
+      "unbounded": {
+        "cases": 36,
+        "represented": 16
+      },
+      "separatrix": {
+        "cases": 16,
+        "represented": 16
+      }
+    },
+    "err_median": 1.0557527074794848e-14,
+    "err_p95": 4.999688082161016e-11,
+    "err_max": 7.053626721510956e-10,
+    "frac_below_1e8": 1.0,
+    "nonfinite": 0,
+    "mp25_rechecks": 35,
+    "build_median_ms": 11.290916500001913
+  },
+  "_meta": {
+    "seed": 20261103,
+    "rwide_n": 1000,
+    "wall_s_last_run": 605.7914497852325,
+    "python": "3.15.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "mpmath": "1.3.0",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "workers": 4,
+    "canonical_sha256": "07f3e1a884bde5764ad6f98b81a9a9bd70316136d0faca782f6d4a8fcc31095a"
+  }
+}

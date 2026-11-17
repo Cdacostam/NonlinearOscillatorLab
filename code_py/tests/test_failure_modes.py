@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from nonlinear_oscillator_lab import (Model, period, period_mp, simulate, exact_solution,
-                                      ClosedFormNotAvailable, simulate_forced, poincare_section)
+                                      ClosedFormNotAvailable, simulate_forced, poincare_section, motion_type)
 
 pytestmark = pytest.mark.failure
 
@@ -31,6 +31,27 @@ def test_inflection_equilibrium_energy_is_critical():
     # b^2 = 4ac: V'(x) = x (x^2 - 1)^2; the level E = V(1) = 1/6 has infinite period
     with pytest.raises(ValueError):
         period(Model(1, -2, 1), 0.0, np.sqrt(1 / 3))
+
+
+def test_unresolved_period_at_split_inflection_level():
+    model = Model(1, -2, np.nextafter(1., np.inf))
+    v = np.sqrt(1/3)
+    assert motion_type(model, 0, v) == "bounded"
+    with pytest.raises(ValueError, match="use period_mp"):
+        period(model, 0, v)
+    assert float(period_mp(model, 0, v, dps=50)) == pytest.approx(3187.7658725993868, rel=1e-12)
+
+
+def test_period_does_not_return_unconverged_quadpack_value(monkeypatch):
+    from nonlinear_oscillator_lab import core
+
+    def quad_with_roundoff(*args, full_output, **kwargs):
+        assert full_output == 1
+        return 1.0, 0.1, {}, "Roundoff prevented convergence"
+
+    monkeypatch.setattr(core, "quad", quad_with_roundoff)
+    with pytest.raises(ValueError, match="use period_mp"):
+        period(Model(4), 0.5, 0)
 
 
 @pytest.mark.parametrize("fn", [period, lambda m, x, v: period_mp(m, x, v, dps=20)])

@@ -13,9 +13,8 @@ or `$Version` and `NOLVersion` in the Wolfram Language).
 ## Development set-up
 
 ```bash
-cd code_py
-python -m pip install -e ".[test,bench]"
-python -m pytest -q --cov=nonlinear_oscillator_lab --cov-branch
+python -m pip install -e "./code_py[test,bench]"
+python -m pytest code_py/tests -q --cov=nonlinear_oscillator_lab --cov-branch
 wolframscript -file code_wl/RunTests.wls       # if a Wolfram Engine is available
 ```
 
@@ -29,8 +28,7 @@ wolframscript -file code_wl/RunTests.wls       # if a Wolfram Engine is availabl
    explained in `CHANGELOG.md`.
 4. Keep the Python and Wolfram Language APIs in correspondence (`docs/api_*.md`); if only one
    side is changed, say so in the pull request.
-5. The continuous-integration tests must pass. Branch coverage of the Python package should not
-   decrease (currently 92 %).
+5. Run the local test command above and review any changes to branch coverage.
 6. By contributing you agree that your contribution is released under the MIT licence.
 
 ## Releases

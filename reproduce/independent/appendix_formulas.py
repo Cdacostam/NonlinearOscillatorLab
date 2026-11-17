@@ -288,7 +288,7 @@ def taylor_reference(a, b, c, x0, v0, ts, digits=30, order=30, h=None, safety=0.
     (step = safety * radius, truncation ~ safety^order). Used where DOP853 is not converged: orbits at a
     separatrix level and stiff large-amplitude orbits. Values after |x| exceeds t_stop_abs are nan."""
     getcontext().prec = digits + 8
-    # exact binary values of the double inputs (v7): the decimal strings repr(float(.)) define a
+    # Exact binary values of the double inputs: decimal strings repr(float(.)) define a
     # slightly different problem, which near a separatrix moves the solution by up to 1e-6
     A, B, C = Decimal(float(a)), Decimal(float(b)), Decimal(float(c))
     x, v = Decimal(float(x0)), Decimal(float(v0))

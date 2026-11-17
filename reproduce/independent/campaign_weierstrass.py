@@ -1,7 +1,7 @@
 """Algorithm 1 on the 1436 initial states of the closed-form campaign.
 
 The cases (a, b, c, x0, v0, motion class) are read from the published campaign file
-    data/results/closed_form_campaign_py.csv      (release v0.2.0; R200, RWIDE, SEP, REP, UNB)
+    data/results/v0.2.2_campaign/closed_form_campaign_py.csv (R200, RWIDE, SEP, REP, UNB)
 so that Algorithm 1 is run on exactly the states on which the packages' Algorithm 2 was evaluated.
 
 Reference and metric (the initial states are shared with Algorithm 2):
@@ -81,7 +81,7 @@ def main():
     results = Path(HERE).parents[1] / "data" / "results"
     outputs = Path(HERE).parent / "outputs"
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("input", nargs="?", type=Path, default=results / "closed_form_campaign_py.csv")
+    parser.add_argument("input", nargs="?", type=Path, default=results / "v0.2.2_campaign" / "closed_form_campaign_py.csv")
     parser.add_argument("--workers", type=int, default=min(4, os.cpu_count() or 1))
     parser.add_argument("--out", type=Path, default=outputs / "campaign_weierstrass.csv")
     args = parser.parse_args()

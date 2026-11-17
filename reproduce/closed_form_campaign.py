@@ -1,6 +1,8 @@
 """Coverage and accuracy campaigns for the closed-form solver (Python port).
 
-Usage:  python reproduce/closed_form_campaign.py [--quick] [--workers N]
+Usage: python reproduce/closed_form_campaign.py [--workers N]
+The default run reads the fixed round-trippable binary64 inputs in
+data/inputs/closed_form_campaign.csv. Use --generate to exercise the sampling design.
 
 Writes reproduce/outputs/closed_form_campaign_py.csv and a JSON summary.
 
@@ -30,13 +32,17 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import multiprocessing as mpc
+import platform
 import sys
 import time
 from pathlib import Path
 
+import mpmath
 import numpy as np
+import scipy
 from scipy.integrate import solve_ivp
 
 ROOT = Path(__file__).resolve().parents[1]                       # package root
@@ -48,6 +54,7 @@ from nonlinear_oscillator_lab.core import motion_type  # noqa: E402
 
 SEED = 20261103
 OUT = OUTPUTS
+CANONICAL = ROOT / "data" / "inputs" / "closed_form_campaign.csv"
 
 
 def mp_reference(a, b, c, x0, v0, ts, dps=25):
@@ -72,6 +79,8 @@ def reference(a, b, c, x0, v0):
     tw = min(20.0, 0.9 * t_esc)
     ts = np.linspace(0, tw, 401)
     ref = solve_ivp(f, (0, tw), [x0, v0], method="DOP853", t_eval=ts, rtol=2.5e-14, atol=1e-16)
+    if not ref.success or len(ref.t) != len(ts):
+        raise RuntimeError(f"Incomplete DOP853 reference: {ref.message}")
     return ts, ref.y[0], t_esc
 
 
@@ -195,41 +204,70 @@ def cases_unb(kmax=10):
 def _run_indexed(item):
     i, case = item
     r = run_case(case)
-    r["idx"] = i
+    r["case_id"] = i + 1
     return r
+
+
+def read_cases(path=CANONICAL):
+    with path.open(newline="") as f:
+        rows = list(csv.DictReader(f))
+    if [int(row["case_id"]) for row in rows] != list(range(1, len(rows) + 1)):
+        raise ValueError("Campaign case IDs must be consecutive and start at 1")
+    return rows
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--quick", action="store_true", help="small RWIDE campaign")
-    ap.add_argument("--n", type=int, default=1000)
-    ap.add_argument("--workers", type=int, default=max(1, mpc.cpu_count()))
+    ap.add_argument("--generate", action="store_true", help="generate a new sample from the design")
+    ap.add_argument("--quick", action="store_true", help="generate a small RWIDE sample")
+    ap.add_argument("--n", type=int, default=1000, help="RWIDE size with --generate")
+    ap.add_argument("--workers", type=int, default=min(4, mpc.cpu_count()))
     args = ap.parse_args()
-    n = 100 if args.quick else args.n
-    cases = cases_r200() + cases_rwide(n) + cases_sep() + cases_rep() + cases_unb()
+    if args.workers < 1 or args.n < 1:
+        ap.error("--workers and --n must be positive")
+    generated = args.generate or args.quick
+    if generated:
+        n = 100 if args.quick else args.n
+        cases = cases_r200() + cases_rwide(n) + cases_sep() + cases_rep() + cases_unb()
+    else:
+        cases = [(r["group"], *(float(r[k]) for k in ("a", "b", "c", "x0", "v0")), r["note"])
+                 for r in read_cases()]
+        n = sum(c[0] == "RWIDE" for c in cases)
+
     OUT.mkdir(parents=True, exist_ok=True)
-    # results are appended case by case to a JSON-lines file, so an interrupted run
-    # can be resumed with the same command (finished cases are skipped)
+    # Resume only if inputs, solver code and numerical environment match.
     part = OUT / "closed_form_campaign_py.partial.jsonl"
-    done = {}
+    signature = OUT / "closed_form_campaign_py.partial.sha256"
+    sources = sorted((ROOT / "code_py" / "src" / "nonlinear_oscillator_lab").glob("*.py"))
+    canonical_hash = "" if generated else hashlib.sha256(CANONICAL.read_bytes()).hexdigest()
+    environment = (platform.platform(), sys.version, np.__version__, scipy.__version__, mpmath.__version__)
+    digest = hashlib.sha256(repr((cases, environment, canonical_hash)).encode())
+    for path in [Path(__file__), *sources]:
+        digest.update(path.read_bytes())
+    stamp = digest.hexdigest()
     if part.exists():
-        for line in part.read_text().splitlines():
-            r = json.loads(line); done[r["idx"]] = r
-    todo = [(i, c) for i, c in enumerate(cases) if i not in done]
-    print("cases %d, already done %d" % (len(cases), len(done)), flush=True)
+        if not signature.exists() or signature.read_text().strip() != stamp:
+            raise RuntimeError(f"Checkpoint differs from this run; use a fresh NOL_OUTPUTS path: {part}")
+        with part.open() as f:
+            done = {r["case_id"]: r for r in map(json.loads, f)}
+    else:
+        signature.write_text(stamp + "\n")
+        done = {}
+    todo = [(i, case) for i, case in enumerate(cases) if i + 1 not in done]
+    print(f"cases {len(cases)}, already done {len(done)}", flush=True)
     t0 = time.time()
-    with mpc.Pool(args.workers) as pool, open(part, "a") as fh:
+    with mpc.Pool(args.workers) as pool, part.open("a") as fh:
         for k, r in enumerate(pool.imap_unordered(_run_indexed, todo, chunksize=1)):
-            fh.write(json.dumps(r, default=float) + "\n"); fh.flush()
-            done[r["idx"]] = r
+            fh.write(json.dumps(r, default=float) + "\n")
+            fh.flush()
+            done[r["case_id"]] = r
             if k % 50 == 0:
-                print("%d/%d  %.0fs" % (len(done), len(cases), time.time() - t0), flush=True)
-    rows = [done[i] for i in range(len(cases))]
-    for r in rows:
-        r.pop("idx", None)
-    keys = list(rows[0].keys())
-    with open(OUT / "closed_form_campaign_py.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, keys); w.writeheader(); w.writerows(rows)
+                print(f"{len(done)}/{len(cases)}  {time.time() - t0:.0f}s", flush=True)
+    rows = [done[i] for i in range(1, len(cases) + 1)]
+    with (OUT / "closed_form_campaign_py.csv").open("w", newline="") as f:
+        w = csv.DictWriter(f, ["case_id", *(k for k in rows[0] if k != "case_id")])
+        w.writeheader()
+        w.writerows(rows)
     summary = {}
     for g in ["R200", "RWIDE", "SEP", "REP", "UNB"]:
         R = [r for r in rows if r["group"] == g]
@@ -256,9 +294,11 @@ def main():
         if g == "R200":
             summary[g]["labels_agree_with_wolfram"] = int(sum(r["representation"] == r["note"] for r in R))
     summary["_meta"] = dict(seed=SEED, rwide_n=n, wall_s_last_run=time.time() - t0, python=sys.version.split()[0],
-                            numpy=np.__version__, scipy=__import__("scipy").__version__,
-                            platform=__import__("platform").platform(), workers=args.workers)
-    json.dump(summary, open(OUT / "closed_form_campaign_py_summary.json", "w"), indent=1, default=str)
+                            numpy=np.__version__, scipy=scipy.__version__, mpmath=mpmath.__version__,
+                            platform=platform.platform(), workers=args.workers, canonical_sha256=canonical_hash)
+    with (OUT / "closed_form_campaign_py_summary.json").open("w") as f:
+        json.dump(summary, f, indent=2)
+        f.write("\n")
     print(json.dumps(summary, indent=1, default=str))
 
 

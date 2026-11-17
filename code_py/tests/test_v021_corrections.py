@@ -1,4 +1,4 @@
-"""v0.2.1 corrections found by the audit of the online demonstrator (November 2026)."""
+"""Regression cases for period deflation and closed-form acceptance messages."""
 import pytest
 
 from nonlinear_oscillator_lab import (Model, period, period_mp, motion_type, exact_solution,

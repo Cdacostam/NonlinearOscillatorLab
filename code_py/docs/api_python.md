@@ -1,4 +1,4 @@
-# Python API reference (`nonlinear_oscillator_lab`, v0.2.1)
+# Python API reference (`nonlinear_oscillator_lab`, v0.2.2)
 
 All functions accept plain Python/NumPy numbers. Docstrings contain the same information
 (`help(nonlinear_oscillator_lab.period)`).
@@ -25,7 +25,7 @@ All functions accept plain Python/NumPy numbers. Docstrings contain the same inf
 
 | Call | Returns | Raises |
 |---|---|---|
-| `period(m, x0, v0, *, tol=1e-9)` | `float` period (double precision); `inf` at an equilibrium | `ValueError` on separatrix energies, unbounded motion, degenerate turning points |
+| `period(m, x0, v0, *, tol=1e-9)` | `float` period (double precision); `inf` at an equilibrium | `ValueError` on separatrix energies, unbounded motion, degenerate turning points or an unresolved quadrature |
 | `period_mp(m, x0, v0, *, dps=50, tol=1e-9)` | `mpmath.mpf` with about `dps` correct digits | same as `period` |
 
 `period_mp` accepts `str` (exact decimal), `fractions.Fraction`, `int` and `float` (exact binary
@@ -33,6 +33,10 @@ value) for the coefficients and initial data. Both use the factored integrand
 $T=2\int_{-\pi/2}^{\pi/2}d\theta/\sqrt{2Q(\bar x+h\sin\theta)}$ with
 $E-V=(x-x_-)(x_+-x)Q(x)$. Lower `tol` (e.g. `1e-25`) when working closer than $10^{-9}$ to a
 separatrix at high precision.
+
+An unresolved double-precision period raises `ValueError` with a referral to `period_mp`.
+`classify_energy` evaluates representable barrier energies even when intermediate powers
+overflow; it explicitly rejects initial or stationary energies outside the finite double range.
 
 ## Closed forms
 
@@ -49,10 +53,14 @@ method `x(t)` (also `sol(t)`) evaluates $x=Ay/\sqrt{1+\lambda y^2+\mu y^4}$ for 
 `'Separatrix (sech)'`, `'Crosses 0 and blows up'`, `'Outside barrier: blows up'`, `'Linear'`,
 `'Equilibrium'`), `y(t)`, `m`, `omega`, `c1`, `period`, `blow_up_time`, `amplitude`, `bounded`.
 
-Applicability: see the paper (Section 4.3) and `data/results/closed_form_campaign_py_exactref_summary.json`.
-A representation exists for all bounded orbits tested and for finite-time escape beyond a
-barrier; it does not exist for orbits exactly on a separatrix level or for most escaping orbits
-with $c<0$ above the barrier, where `ClosedFormNotAvailable` is raised.
+Applicability is conditional on the algebraic identities, $s>0$, $1-\mu x_0^4\ne0$,
+and $1+\lambda y^2+\mu y^4>0$ along the interval of interest. See Box 1 and Theorem 1 of the article.
+Proposition 1 uses the original map at every finite $y$, including zero, and the reciprocal
+map near a simple pole when $\mu>0$. The sign-fixed continuation for $\mu=0<\lambda$ requires
+an auxiliary branch with no zeros. The implementation checks candidates at
+finite sample times; the caller should evaluate within an admissible interval.
+`ClosedFormNotAvailable` means that no candidate passed the acceptance checks. Use `motion_type`
+to classify the orbit independently. See Table 4 and `data/results/v0.2.2_campaign/` for observed coverage.
 
 ## Simulation
 
@@ -79,5 +87,5 @@ system $(x,v,\theta)$ with $\dot\theta=\omega$.
 | `ValueError('Separatrix energy: infinite period')` | energy equals a barrier or degenerate-equilibrium energy within `tol` |
 | `ValueError('Initial state is not in a verified bounded component')` | unbounded motion |
 | `ValueError('Degenerate (multiple) turning point ...')` | $V'(x_\pm)=0$ |
-| `ClosedFormNotAvailable` (subclass of `ValueError`) | no real representation passes the checks |
+| `ClosedFormNotAvailable` (subclass of `ValueError`) | no candidate representation passed the acceptance checks |
 | `RuntimeError` | ODE integrator failure |

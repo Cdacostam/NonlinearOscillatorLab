@@ -1,5 +1,5 @@
 (* Paclet metadata for the Wolfram Language part of NonlinearOscillatorLab.
-   Build:  PacletTools`CreatePacletArchive[DirectoryName[$InputFileName]]  -> .paclet file *)
+   BuildPaclet.wls stages this descriptor alongside Kernel/NonlinearOscillatorLab.wl. *)
 PacletObject[
   <|
     "Name" -> "NonlinearOscillatorLab",
@@ -10,8 +10,7 @@ PacletObject[
     "License" -> "MIT",
     "URL" -> "https://github.com/Cdacostam/NonlinearOscillatorLab",
     "Extensions" -> {
-      {"Kernel", "Root" -> ".", "Context" -> "NonlinearOscillatorLab`",
-       "Symbols" -> {}, "Files" -> {"NonlinearOscillatorLab.wl"}}
+      {"Kernel", "Root" -> "Kernel", "Context" -> "NonlinearOscillatorLab`"}
     }
   |>
 ]

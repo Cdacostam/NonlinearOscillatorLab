@@ -1,14 +1,14 @@
-"""Re-reference the 25-digit mpmath rows of the archived closed-form campaign (v7, finding H1).
+"""Compare 25-digit trajectory references from decimal and exact binary64 inputs.
 
-The script closed_form_campaign.py of release v0.2.0 built its 25-digit
-reference from ctx.mpf(repr(float(v))), i.e. from the shortest decimal string of each double,
-not from the binary value that exact_solution receives. Near a separatrix a one-ulp change of
-the data moves the solution by up to 1e-6, so that reference solves a different problem.
+Read the closed-form campaign in data/results/closed_form_campaign_py.csv. For every
+row with ref = mp25, compute the reference from both the shortest decimal strings
+of the inputs and their exact binary64 values. The case, solver, grid, DOP853 window
+and recheck threshold e_x > 1e-10 are shared by the two comparisons.
 
-This script keeps everything else identical (cases, closed-form solver, grid, DOP853 window,
-the rule "recheck with mp25 when e_x > 1e-10") and recomputes, for every row with ref = mp25:
-  err_dec  : reference from decimal strings (must reproduce the archived err)
-  err_bin  : reference from the exact binary inputs and grid times, ctx.mpf(float(v))
+  err_dec  : reference from ctx.mpf(repr(float(v)))
+  err_bin  : reference from the binary64 inputs and grid times, ctx.mpf(float(v))
+
+Near a separatrix these input representations can give different reference trajectories.
 Usage: python reproduce/rereference_campaign.py [--workers N]
 """
 from __future__ import annotations
